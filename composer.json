@@ -1,0 +1,51 @@
+{
+    "name": "lastdino/kanban-board",
+    "description": "This is my package KanbanBoard",
+    "keywords": [
+        "Lastdino",
+        "laravel",
+        "Kanban Board"
+    ],
+    "homepage": "https://github.com/lastdino/kanban-board",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lastdino",
+            "email": "87484368+lastdino@users.noreply.github.com",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Lastdino\\KanbanBoard\\": "src/",
+            "Lastdino\\KanbanBoard\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Workbench\\App\\": "workbench/app/"
+        }
+    },
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^12.0",
+        "livewire/livewire": "^3.0",
+        "livewire/flux": "^2.0"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Lastdino\\KanbanBoard\\KanbanBoardServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

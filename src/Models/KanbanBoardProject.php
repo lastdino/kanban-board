@@ -14,6 +14,6 @@ class KanbanBoardProject extends Model
 
     public function columns(): HasMany
     {
-        return $this->hasMany(KanbanBoardColumn::class)->orderBy('position');
+        return $this->hasMany(KanbanBoardColumn::class,'board_id')->orderBy('position');
     }
 }

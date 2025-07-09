@@ -3,15 +3,20 @@
 namespace Lastdino\KanbanBoard;
 
 use Illuminate\Support\ServiceProvider;
-use Lastdino\KanbanBoard\Livewire\KanbanBoard\Board;
-use Livewire\Livewire;
-
 use Lastdino\KanbanBoard\Helpers\UserDisplayHelper;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\Board;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\SubTaskList;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskCard;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskModal;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\CheckListItem;
+
+use Livewire\Livewire;
 
 class KanbanBoardServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+
         $this->publishes([
             __DIR__ . '/../config/kanban-board.php' => config_path('kanban-board.php'),
         ],'kanban-config');
@@ -55,5 +60,10 @@ class KanbanBoardServiceProvider extends ServiceProvider
     protected function loadLivewireComponents(): void
     {
         Livewire::component('kanban-board.board', Board::class);
+        Livewire::component('kanban-board.component.task-modal', TaskModal::class);
+        Livewire::component('kanban-board.component.check-list-item', CheckListItem::class);
+        Livewire::component('kanban-board.component.sub-task-list', SubTaskList::class);
+        Livewire::component('kanban-board.component.task-card', TaskCard::class);
+
     }
 }

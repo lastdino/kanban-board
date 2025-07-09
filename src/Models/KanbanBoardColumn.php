@@ -11,6 +11,7 @@ class KanbanBoardColumn extends Model
         'title',
         'board_id',
         'position',
+        'color',
     ];
 
     public function board(): BelongsTo
@@ -20,6 +21,6 @@ class KanbanBoardColumn extends Model
 
     public function tasks(): HasMany
     {
-        return $this->hasMany(KanbanBoardTask::class)->orderBy('position');
+        return $this->hasMany(KanbanBoardTask::class, 'column_id')->orderBy('position');
     }
 }

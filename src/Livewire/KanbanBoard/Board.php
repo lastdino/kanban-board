@@ -4,9 +4,13 @@ namespace Lastdino\KanbanBoard\Livewire\KanbanBoard;
 
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Lastdino\KanbanBoard\Models\KanbanBoardColumn as Column;
 use Lastdino\KanbanBoard\Models\KanbanBoardTask as Task;
+
+use Flux\Flux;
 
 /**
  * Class Board
@@ -16,52 +20,27 @@ use Lastdino\KanbanBoard\Models\KanbanBoardTask as Task;
  */
 class Board extends Component
 {
+    #[Url]
     public $boardId;
-    public $showNewTaskModal = false;
-    public $selectedColumn = null;
-    public $newTaskTitle = '';
-    public $newTaskDescription = '';
-    public $selectedBadges = [];
 
     public function mount($boardId = null)
     {
         $this->boardId = $boardId ?? 1; // デフォルトボード
+        $this->task=Column::where('board_id', $this->boardId)->first()->tasks()->first();
     }
 
     #[Title('かんばんボード')]
     public function render()
     {
-        return view('livewire.kanban-board');
+        return view('kanban-board::livewire.kanban-board.board');
     }
 
     #[Computed]
     public function columns()
     {
-        return Column::with(['tasks.badges'])
-            ->where('board_id', $this->boardId)
+        return Column::where('board_id', $this->boardId)
             ->orderBy('position')
-            ->get()
-            ->map(function ($column) {
-                return [
-                    'id' => $column->id,
-                    'title' => $column->title,
-                    'tasks_count' => $column->tasks->count(),
-                    'cards' => $column->tasks->sortBy('position')->map(function ($task) {
-                        return [
-                            'id' => $task->id,
-                            'title' => $task->title,
-                            'description' => $task->description,
-                            'position' => $task->position,
-                            'badges' => $task->badges->map(function ($badge) {
-                                return [
-                                    'title' => $badge->title,
-                                    'color' => $badge->color,
-                                ];
-                            })->toArray()
-                        ];
-                    })->values()->toArray()
-                ];
-            })->toArray();
+            ->get();
     }
 
 
@@ -112,6 +91,10 @@ class Board extends Component
 
         $task = Task::find($taskId);
 
+        if ($task->is_completed) {
+            return;
+        }
+
         if ($oldPosition < $newPosition) {
             // 下に移動：間のタスクを上に詰める
             Task::where('column_id', $columnId)
@@ -152,10 +135,17 @@ class Board extends Component
             ->where('position', '>', $oldPosition)
             ->decrement('position');
 
-        // 新しいカラムのタスクをずらす
-        Task::where('column_id', $toColumnId)
-            ->where('position', '>=', $newPosition)
-            ->increment('position');
+        if ($task->is_completed) {
+            $maxCompletedPosition = Task::where('column_id', $toColumnId)
+                ->where('is_completed', true)
+                ->max('position') ?? 0;
+            $newPosition = $maxCompletedPosition + 1;
+        }else{
+            // 新しいカラムのタスクをずらす
+            Task::where('column_id', $toColumnId)
+                ->where('position', '>=', $newPosition)
+                ->increment('position');
+        }
 
         // タスクを新しいカラムに移動
         $task->update([
@@ -187,84 +177,24 @@ class Board extends Component
         $Column->update(['position' => $newPosition]);
     }
 
-
-    /**
-     * タスクをタイトル順にソート
-     */
-    public function sortTasksByTitle($columnId)
+    public function setLabelColor($color,$column)
     {
-        $tasks = Task::where('column_id', $columnId)
-            ->orderBy('title')
-            ->get();
-
-        foreach ($tasks as $index => $task) {
-            $task->update(['position' => $index + 1]);
+        if($column['color'] == $color){
+            $color = null;
         }
+        Column::find($column['id'])->update(['color'=>$color]);
+        $this->dispatch('refresh-columns')->to(Board::class);
     }
 
-    /**
-     * タスクを作成日順にソート
-     */
-    public function sortTasksByCreated($columnId)
-    {
-        $tasks = Task::where('column_id', $columnId)
-            ->orderBy('created_at')
-            ->get();
-
-        foreach ($tasks as $index => $task) {
-            $task->update(['position' => $index + 1]);
-        }
+    public function removeColumn($id){
+        $db=Column::find($id);
+        $db->delete();
     }
 
-    public function openNewTaskModal($columnId)
+    #[On('refresh-columns')]
+    public function refreshColumns()
     {
-        $this->selectedColumn = $columnId;
-        $this->showNewTaskModal = true;
-        $this->reset(['newTaskTitle', 'newTaskDescription', 'selectedBadges']);
-    }
-
-    public function closeNewTaskModal()
-    {
-        $this->showNewTaskModal = false;
-        $this->reset(['selectedColumn', 'newTaskTitle', 'newTaskDescription', 'selectedBadges']);
-    }
-
-    public function createTask()
-    {
-        $this->validate([
-            'newTaskTitle' => 'required|min:3|max:255',
-            'newTaskDescription' => 'nullable|max:1000',
-        ]);
-
-        $maxPosition = Task::where('column_id', $this->selectedColumn)->max('position') ?? 0;
-
-        $task = Task::create([
-            'title' => $this->newTaskTitle,
-            'description' => $this->newTaskDescription,
-            'column_id' => $this->selectedColumn,
-            'position' => $maxPosition + 1,
-        ]);
-
-        foreach ($this->selectedBadges as $badgeId) {
-            $task->badges()->attach($badgeId);
-        }
-
-        $this->closeNewTaskModal();
-    }
-
-    public function deleteTask($taskId)
-    {
-        $task = Task::find($taskId);
-        if ($task) {
-            $columnId = $task->column_id;
-            $position = $task->position;
-
-            $task->delete();
-
-            // 後続のタスクの位置を調整
-            Task::where('column_id', $columnId)
-                ->where('position', '>', $position)
-                ->decrement('position');
-        }
+        // Computedプロパティをリセット
+        unset($this->columns);
     }
 }

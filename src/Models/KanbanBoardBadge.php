@@ -13,6 +13,6 @@ class KanbanBoardBadge extends Model
 
     public function tasks(): BelongsToMany
     {
-        return $this->belongsToMany(KanbanBoardTask::class,'badge_task','badge_id','task_id');
+        return $this->belongsToMany(KanbanBoardTask::class,'kanban_board_badge_task','badge_id','task_id');
     }
 }

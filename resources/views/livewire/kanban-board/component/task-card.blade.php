@@ -27,7 +27,7 @@
                         </flux:tooltip>
                     @endif
                 </div>
-                <flux:heading>#{{$task['id']}}{{ $task['title'] }}</flux:heading>
+                <flux:heading>#{{$task['id']}}{{ $task['title'] }}-{{$task->position}}</flux:heading>
             </div>
             @if($task['label_color'])
                 <x-kanban-board::label_color class="h-1 rounded-full mt-1" color="{{ $task['label_color'] }}"/>

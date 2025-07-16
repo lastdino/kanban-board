@@ -23,10 +23,18 @@ class Board extends Component
     #[Url]
     public $boardId;
 
+    public $search = '';
+    public $sortBy = 'id';
+    public $sortDirection = 'asc';
+
+    public $column_title='';
+
+
+    public $task_assigned_user='';
+
     public function mount($boardId = null)
     {
         $this->boardId = $boardId ?? 1; // デフォルトボード
-        $this->task=Column::where('board_id', $this->boardId)->first()->tasks()->first();
     }
 
     #[Title('かんばんボード')]
@@ -41,6 +49,16 @@ class Board extends Component
         return Column::where('board_id', $this->boardId)
             ->orderBy('position')
             ->get();
+    }
+
+
+    public function sort($column) {
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
     }
 
 
@@ -189,6 +207,23 @@ class Board extends Component
     public function removeColumn($id){
         $db=Column::find($id);
         $db->delete();
+    }
+
+    public function addColumn(){
+
+        $this->validate([
+            'column_title' => 'required',
+        ]);
+
+        $maxPosition = Column::where('board_id', $this->boardId)->max('position') ?? 0;
+
+        $task = Column::create([
+            'title'=>$this->column_title,
+            'board_id'=>$this->boardId,
+            'position' => $maxPosition + 1,
+        ]);
+
+        $this->refreshColumns();
     }
 
     #[On('refresh-columns')]

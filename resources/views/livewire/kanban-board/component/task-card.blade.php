@@ -1,7 +1,7 @@
 <div
-    class="bg-white rounded-lg shadow-xs border border-zinc-200 dark:border-white/10 dark:bg-zinc-800 space-y-2"
+    class="bg-white rounded-lg shadow-xs border border-zinc-200 dark:border-white/10 dark:bg-zinc-800 space-y-2 w-full"
     x-sort:item="{{ $task['id'] }}">
-    <div class="p-3 " wire:click="$dispatchTo('kanban-board.component.task-modal', 'show-modal', { id: {{ $task->id }} })">
+    <div class="p-3 " wire:click="$dispatch('show-modal', { id: {{ $task->id }} })">
         @if($task->isSubtask())
             <flux:heading>
                 <flux:icon.rectangle-stack class="size-3 inline"/>
@@ -9,7 +9,7 @@
             </flux:heading>
         @endif
         <div  class="{{ $task->isSubtask() ? 'space-y-2 ml-4 rounded-lg shadow-xs border border-zinc-200 dark:border-white/10 dark:bg-zinc-800 p-3' : 'space-y-2' }}">
-            <div class="flex gap-2" >
+            <div class="flex flex-wrap gap-2" >
                 @foreach ($task['badges'] as $badge)
                     <flux:badge :color="$badge['color']"
                                 size="sm">{{ $badge['title'] }}</flux:badge>
@@ -27,7 +27,7 @@
                         </flux:tooltip>
                     @endif
                 </div>
-                <flux:heading>#{{$task['id']}}{{ $task['title'] }}-{{$task->position}}</flux:heading>
+                <flux:heading>#{{$task['id']}}{{ $task['title'] }}</flux:heading>
             </div>
             @if($task['label_color'])
                 <x-kanban-board::label_color class="h-1 rounded-full mt-1" color="{{ $task['label_color'] }}"/>

@@ -86,6 +86,18 @@ return new class extends Migration
             $table->unique(['badge_id', 'task_id']);
         });
 
+        // project_userピボットテーブル
+        Schema::create('kanban_board_project_user', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('project_id');
+            $table->unsignedBigInteger('user_id');
+            $table->timestamps();
+
+            $table->foreign('project_id')->references('id')->on('kanban_board_projects')->onDelete('cascade');
+            $table->unique(['project_id', 'user_id']);
+            $table->index('user_id');
+        });
+
         // チェックリスト項目テーブル
         Schema::create('kanban_board_checklist_items', function (Blueprint $table) {
             $table->id();

@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class KanbanBoardBadge extends Model
 {
     protected $fillable = [
+        'board_id',
         'title',
         'color',
     ];
+
 
     public function tasks(): BelongsToMany
     {

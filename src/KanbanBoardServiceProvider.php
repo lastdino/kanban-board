@@ -7,6 +7,8 @@ use Lastdino\KanbanBoard\Helpers\UserDisplayHelper;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Board;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\SubTaskList;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskCard;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskComments;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskFile;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskModal;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\CheckListItem;
 
@@ -64,6 +66,8 @@ class KanbanBoardServiceProvider extends ServiceProvider
         Livewire::component('kanban-board.component.check-list-item', CheckListItem::class);
         Livewire::component('kanban-board.component.sub-task-list', SubTaskList::class);
         Livewire::component('kanban-board.component.task-card', TaskCard::class);
+        Livewire::component('kanban-board.component.task-comments', TaskComments::class);
+        Livewire::component('kanban-board.component.task-file', TaskFile::class);
 
     }
 }

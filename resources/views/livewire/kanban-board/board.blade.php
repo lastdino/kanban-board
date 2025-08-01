@@ -1,8 +1,8 @@
 <div class="" x-data="{ selectedTab: 'kanban' }" >
     <div class="flex flex-col md:flex-row gap-6 justify-between md:items-center mb-6">
         <flux:breadcrumbs>
-            <flux:breadcrumbs.item href="#" divider="slash">Acme Inc.</flux:breadcrumbs.item>
-            <flux:breadcrumbs.item href="#" divider="slash">iOS App V2</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="#" divider="slash">xxx Inc.</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="" divider="slash">{{$project->title}}</flux:breadcrumbs.item>
         </flux:breadcrumbs>
         <div class="flex gap-4">
             <flux:radio.group variant="segmented">
@@ -12,12 +12,38 @@
 
             <flux:separator vertical class="my-2" />
             <flux:avatar.group>
-                @foreach (['Caleb Porzio', 'River Porzio', 'Knox Porzio'] as $item)
-                    <flux:avatar size="sm" tooltip name="{{ $item }}" src="https://i.pravatar.cc/100?img={{ $loop->index + 12 }}" />
+                @foreach ($users->take(3) as $user)
+                    <flux:avatar size="sm" tooltip name="{{ $user->name }}" src="{{$user->getUserAvatar}}" />
                 @endforeach
-                <flux:avatar size="sm">3+</flux:avatar>
+                @if($users->count()-3 >= 1 && $users->count() != 0)
+                     <flux:avatar size="sm">{{$users->count()-3}}+</flux:avatar>
+                @endif
             </flux:avatar.group>
-            <flux:button variant="filled" size="sm">Invite</flux:button>
+            <flux:modal.trigger name="invite">
+                @if($this->project->admin->id === auth()->id())
+                    <flux:button variant="filled" size="sm">招待</flux:button>
+                @endif
+            </flux:modal.trigger>
+            <flux:modal name="invite" class="md:w-96">
+                <div class="space-y-6">
+                    <div>
+                        <flux:heading size="lg">ユーザーを招待</flux:heading>
+                        <flux:text class="mt-2">追加するユーザーを選択して招待してください。</flux:text>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <select wire:model="selectedUser" class="rounded-lg border border-zinc-200 bg-white dark:border-white/10 dark:bg-zinc-800">
+                            <option value="">招待する人を選択</option>
+                            @foreach ($NotInvitedUsers as $user)
+                                <option value="{{$user->id}}">{{$user->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="flex">
+                        <flux:spacer />
+                        <flux:button type="submit" variant="primary" wire:click="invite">招待</flux:button>
+                    </div>
+                </div>
+            </flux:modal>
         </div>
     </div>
     <div>
@@ -30,8 +56,13 @@
                                 <div class="rounded-lg w-80 max-w-80 bg-zinc-400/5 dark:bg-zinc-900 h-[calc(100vh-9rem)] flex flex-col">
                                     <div class="px-4 pt-4 flex justify-between items-start">
                                         <div>
-                                            <flux:heading>{{ $column['title'] }}</flux:heading>
-                                            <flux:subheading class="mb-0!">{{ $column->tasks->count() }} tasks</flux:subheading>
+                                            @if($column_title_edit == $column['id'])
+                                                <flux:input wire:model="column_title" wire:keydown.enter="updateColumnTitle({{ $column['id'] }})" wire:blur="updateColumnTitle({{ $column['id'] }})" x-init="$nextTick(() => $el.focus())"/>
+                                            @else
+                                                <flux:button variant="ghost" size="sm" class="group relative " wire:click="editColumnTitle({{ $column['id'] }},'{{ $column['title'] }}')">{{ $column['title'] }}
+                                                    <flux:icon name="pencil" class="h-4 w-4 ml-1 hidden group-hover:inline-block"/>
+                                                </flux:button>
+                                            @endif
                                         </div>
                                         <div>
                                             <flux:button variant="subtle" icon="plus" size="sm" tooltip="タスクを追加" wire:click="dispatchTo('kanban-board.component.task-modal', 'show-new-modal',{columnId: {{ $column->id }}})"/>
@@ -66,6 +97,11 @@
                                             </flux:dropdown>
                                         </div>
                                     </div>
+                                    <div class="px-4 flex justify-between items-end">
+                                        <div></div>
+                                        <flux:text class="mb-0!">{{ $column->tasks->count() }} tasks</flux:text>
+                                    </div>
+
                                     <x-kanban-board::label_color color="{{ $column->color }}" class="rounded-lg h-1 rounded-full mt-1 flex-none"/>
                                     <div class="flex flex-col gap-2 px-2 py-2 overflow-y-auto"
                                          @dragover.prevent="autoScroll($event)"
@@ -119,7 +155,7 @@
                     </div>
                     <div class="rounded-lg w-80 max-w-80  bg-zinc-400/5 dark:bg-zinc-900 flex flex-row gap-2 flex-none p-2 h-12 justify-between items-center" x-data="{ open: false }">
                         <flux:button variant="subtle" icon="plus" size="sm" tooltip="タスクリストを追加" x-on:click="open = ! open" x-show="!open">タスクリストの追加</flux:button>
-                        <flux:input wire:model="column_title" wire:keydown.enter="addColumn" @keyup.enter="open = ! open" x-init="$nextTick(() => $el.focus())" x-show="open"/>
+                        <flux:input wire:model="column_title" wire:keydown.enter="addColumn" @keyup.enter="open = ! open"  @click.outside="open = false" x-init="$nextTick(() => $el.focus())" x-show="open"/>
                     </div>
                 </div>
 
@@ -195,11 +231,11 @@
                             {{-- 未完了タスク --}}
                             @if($sortDirection === 'asc')
                                 @foreach($column->tasks->where('is_completed', false)->sortBy($sortBy) as $card)
-                                    <tr x-show="showTasks" wire:click="$dispatchTo('kanban-board.component.task-modal', 'show-modal', { id: {{ $card->id }} })">
+                                    <tr x-show="showTasks" wire:click="$dispatch('show-modal', { id: {{ $card->id }} })">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->title }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date->format('Y/m/d') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date->format('Y/m/d') }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->updated_at->format('Y/m/d') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->assignedUser->name }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             @foreach ($card['badges'] as $badge)
@@ -211,7 +247,7 @@
                                 @endforeach
                             @else
                                 @foreach($column->tasks->where('is_completed', false)->sortByDesc($sortBy) as $card)
-                                    <tr x-show="showTasks">
+                                    <tr x-show="showTasks" wire:click="$dispatch('show-modal', { id: {{ $card->id }} })">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->title }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date->format('Y/m/d') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date->format('Y/m/d') }}</td>
@@ -242,8 +278,18 @@
 
                             {{-- 完了タスク一覧 --}}
                             @foreach($column->tasks->where('is_completed', true) as $card)
-                                <tr x-show="showTasks && showCompleted">
+                                <tr x-show="showTasks && showCompleted" wire:click="$dispatch('show-modal', { id: {{ $card->id }} })">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->title }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date->format('Y/m/d') }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date->format('Y/m/d') }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->updated_at->format('Y/m/d') }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->assignedUser->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        @foreach ($card['badges'] as $badge)
+                                            <flux:badge :color="$badge['color']"
+                                                        size="sm">{{ $badge['title'] }}</flux:badge>
+                                        @endforeach
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -254,7 +300,7 @@
         </div>
     </div>
 
-    <livewire:kanban-board.component.task-modal/>
+    <livewire:kanban-board.component.task-modal :$boardId/>
 </div>
 
 

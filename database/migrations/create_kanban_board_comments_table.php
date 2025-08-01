@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('task_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('reply_id')->nullable();
             $table->text('content');
             $table->timestamps();
 
             $table->foreign('task_id')->references('id')->on('kanban_board_tasks')->onDelete('cascade');
+            $table->foreign('reply_id')->references('id')->on('kanban_board_comments')->onDelete('cascade');
             $table->index('user_id');
             $table->index('task_id');
         });

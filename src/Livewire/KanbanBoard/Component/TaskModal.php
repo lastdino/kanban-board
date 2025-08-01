@@ -9,10 +9,14 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Lastdino\KanbanBoard\Models\KanbanBoardTask as Task;
 use Lastdino\KanbanBoard\Models\kanbanBoardCheckListItem as CheckListItem;
+use Lastdino\KanbanBoard\Models\KanbanBoardBadge as Badge;
+use Lastdino\KanbanBoard\Models\KanbanBoardProject as Project;
 use Flux\Flux;
 
 class TaskModal extends Component
 {
+    public $boardId;
+
     public $showTaskModal = false;
     public $editing = false;
 
@@ -33,18 +37,27 @@ class TaskModal extends Component
 
     public $search;
 
+    public $tags=[];
+    public $tag_name;
+    public $search_tag;
+    public $tag_color;
 
-    public function mount($placeholder = null)
+    public $review_user=[];
+    public $follow_user=[];
+    public $name;
+
+
+
+    public function mount()
     {
     }
 
     #[Computed]
     public function MainTask(){
         if(!empty($this->task)){
-            $board = $this->task->column->board;
             return Task::query()
-                ->whereHas('column', function ($query) use ($board) {
-                    $query->where('board_id', $board->id);
+                ->whereHas('column', function ($query) {
+                    $query->where('board_id', $this->boardId);
                 })
                 ->with(['column', 'badges']) // 必要に応じてリレーションを追加
                 ->orderBy('position')
@@ -56,11 +69,64 @@ class TaskModal extends Component
         return [];
     }
 
+    #[Computed]
+    public function Badges(){
+        if(!empty($this->task)){
+            return Badge::query()
+                ->where('board_id', $this->boardId)
+                ->tap(fn ($query) => $this->search_tag ? $query->where('title','LIKE', '%' . $this->search_tag . '%') : $query)
+                ->tap(fn ($query) => $this->tag_name ? $query->where('title','LIKE', '%' . $this->tag_name . '%') : $query)
+                ->get();
+        }
+        return collect();
+    }
+
+    #[Computed]
+    public function Users(){
+        if(!empty($this->task)){
+            return Project::find($this->boardId)->users()
+                ->tap(fn ($query) => $this->name ? $query->where('name','LIKE', '%' . $this->name . '%') : $query)
+                ->get();
+        }
+        return collect();
+    }
+
+    #[Computed]
+    public function notInReviewers(){
+        return $this->Users->whereNotIn('id', $this->task->reviewers->pluck('id'));
+    }
+    #[Computed]
+    public function notInFollowers(){
+        return $this->Users->whereNotIn('id', $this->task->followers->pluck('id'));
+    }
+    #[Computed]
+    public function notInBadges(){
+        return $this->Badges->whereNotIn('id', $this->task->badges->pluck('id'));
+    }
+
+    public function openTagModal(){
+        $this->search_tag=null;
+        $this->reset('tags');
+        $this->tag_color=null;
+        Flux::modal('edit-tags')->show();
+    }
+    public function openReviewerModal(){
+        $this->name=null;
+        $this->reset('review_user');
+        Flux::modal('edit-reviewer')->show();
+    }
+    public function openFollowerModal(){
+        $this->name=null;
+        $this->reset('follow_user');
+        Flux::modal('edit-follower')->show();
+    }
+
+
     #[On('show-modal')]
     public function show($id){
         $this->new=false;
         if($id){
-            $this->task=Task::find($id);
+            $this->task=Task::with(['badges','subtasks','checklistItems','comments'])->find($id);
             $this->title = $this->task->title;
             $this->description = $this->task->description;
             $this->start_date = $this->task->start_date?->format('Y-m-d');
@@ -111,6 +177,7 @@ class TaskModal extends Component
             'column_id' => $this->columnId,
             'position' => $maxPosition + 1,
             'label_color' => $this->label_color,
+            'created_user_id'=>auth()->id(),
         ]);
 
         $this->dispatch('refresh-columns')->to(Board::class);
@@ -221,7 +288,7 @@ class TaskModal extends Component
             'position'=>Task::where('column_id', $this->task->column_id)->max('position') ?? 0,
             'sub_position'=>$this->task->subtasks->count(),
             'parent_id'=>$this->task->id,
-            'created_user_id'=>1,
+            'created_user_id'=>auth()->id(),
         ]);
         $this->subTitle = '';
         $this->refreshTask();
@@ -327,6 +394,62 @@ class TaskModal extends Component
             $this->task->update(['label_color'=>$this->label_color]);
             $this->dispatch('refresh-columns')->to(Board::class);
         }
+    }
+
+    public function removeBadge($badgeId){
+        $this->task->badges()->detach($badgeId);
+        $this->refreshTask();
+    }
+    public function addBadge(){
+        $this->task->badges()->attach($this->tags);
+        $this->reset('tags');
+        $this->refreshTask();
+        Flux::modal('edit-tags')->close();
+    }
+
+
+    public function setTagColor($color)
+    {
+        if($this->tag_color == $color){
+            $this->tag_color = null;
+        }else{
+            $this->tag_color = $color;
+        }
+    }
+
+    public function addNewBadge(){
+        $badge=Badge::create([
+            'title'=>$this->tag_name,
+            'board_id'=>$this->boardId,
+            'color' => $this->tag_color,
+        ]);
+        $this->task->badges()->attach($badge->id);
+        $this->refreshTask();
+        $this->tags=$this->task->badges->pluck('id');
+        $this->reset('tag_name');
+        Flux::modal('add-tag')->close();
+    }
+
+    public function removeReviewer($userId){
+        $this->task->reviewers()->detach($userId);
+        $this->refreshTask();
+    }
+    public function addReviewer(){
+        $this->task->reviewers()->attach($this->review_user,['is_reviewer' => true]);
+        $this->reset('review_user');
+        $this->refreshTask();
+        Flux::modal('edit-reviewer')->close();
+    }
+
+    public function removeFollower($userId){
+        $this->task->followers()->detach($userId);
+        $this->refreshTask();
+    }
+    public function addFollower(){
+        $this->task->followers()->attach($this->follow_user);
+        $this->reset('follow_user');
+        $this->refreshTask();
+        Flux::modal('edit-follower')->close();
     }
 
     public function refreshTask(){

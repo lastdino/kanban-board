@@ -9,6 +9,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Lastdino\KanbanBoard\Models\KanbanBoardColumn as Column;
 use Lastdino\KanbanBoard\Models\KanbanBoardTask as Task;
+use Lastdino\KanbanBoard\Models\kanbanBoardProject as Project;
 
 use Flux\Flux;
 
@@ -22,6 +23,10 @@ class Board extends Component
 {
     #[Url]
     public $boardId;
+    public $project;
+
+    public $NotInvitedUsers;
+    public $users;
 
     public $search = '';
     public $sortBy = 'id';
@@ -29,12 +34,22 @@ class Board extends Component
 
     public $column_title='';
 
+    public $selectedUser;
+
+    public $admin='';
+
 
     public $task_assigned_user='';
+
+    public $column_title_edit;
 
     public function mount($boardId = null)
     {
         $this->boardId = $boardId ?? 1; // デフォルトボード
+        $this->project=Project::find($this->boardId);
+        $this->NotInvitedUsers=$this->project->NotInvitedUsers();
+        $this->users=$this->project->users;
+        $this->admin=$this->project->admin;
     }
 
     #[Title('かんばんボード')]
@@ -46,7 +61,7 @@ class Board extends Component
     #[Computed]
     public function columns()
     {
-        return Column::where('board_id', $this->boardId)
+        return Column::with('tasks')->where('board_id', $this->boardId)
             ->orderBy('position')
             ->get();
     }
@@ -59,6 +74,15 @@ class Board extends Component
             $this->sortBy = $column;
             $this->sortDirection = 'asc';
         }
+    }
+
+    public function invite(){
+        Flux::modal('invite')->close();
+        $this->project->users()->attach($this->selectedUser);
+        Flux::toast(heading: '招待', text: '招待しました。', variant: 'success',);
+
+        $this->NotInvitedUsers=$this->project->NotInvitedUsers();
+        $this->users=$this->project->users;
     }
 
 
@@ -223,6 +247,22 @@ class Board extends Component
             'position' => $maxPosition + 1,
         ]);
 
+        $this->refreshColumns();
+    }
+
+    public function editColumnTitle($columnId,$oldTitle){
+        $this->column_title_edit=$columnId;
+        $this->column_title=$oldTitle;
+    }
+
+    public function updateColumnTitle($columnId)
+    {
+        $this->validate([
+            'column_title' => 'required',
+        ]);
+        Column::find($columnId)->update(['title' => $this->column_title]);
+        $this->column_title_edit=null;
+        // 最新データを取得し直す（省略してもOKなら不要）
         $this->refreshColumns();
     }
 

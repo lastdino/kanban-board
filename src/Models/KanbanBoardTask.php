@@ -5,9 +5,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class KanbanBoardTask extends Model
+class KanbanBoardTask extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $fillable = [
         'title',
         'description',
@@ -36,6 +40,11 @@ class KanbanBoardTask extends Model
         'checklistItems',
         'completedChecklistItems',
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('task');
+    }
 
     protected function initializeKanbanBoardTask()
     {
@@ -108,6 +117,7 @@ class KanbanBoardTask extends Model
     {
         return $this->belongsToMany(config('kanban-board.users_model'), 'kanban_board_task_followers', 'task_id', 'user_id')
             ->withPivot('is_reviewer')
+            ->wherePivot('is_reviewer', false)
             ->withTimestamps();
     }
 

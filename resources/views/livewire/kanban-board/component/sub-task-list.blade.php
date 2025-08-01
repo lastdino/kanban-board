@@ -9,7 +9,7 @@
         </flux:tooltip>
     @endif
     <flux:separator vertical />
-    <div class="w-full" wire:click="$dispatchTo('kanban-board.component.task-modal', 'show-modal', { id: {{ $item->id }} })">{{ $title }}</div>
+    <div class="w-full" wire:click="$dispatch('show-modal', { id: {{ $item->id }} })">{{ $title }}</div>
     <div>
         <flux:dropdown>
             <flux:button icon="ellipsis-vertical" size="xs" variant="subtle"></flux:button>

@@ -10,12 +10,18 @@ class KanbanBoardComment extends Model
     protected $fillable = [
         'task_id',
         'user_id',
+        'reply_id',
         'content',
     ];
 
     public function task(): BelongsTo
     {
         return $this->belongsTo(KanbanBoardTask::class, 'task_id');
+    }
+
+    public function reply(): BelongsTo
+    {
+        return $this->belongsTo(KanbanBoardComment::class, 'reply_id');
     }
 
     public function user(): BelongsTo

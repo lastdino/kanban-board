@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('task_id')->references('id')->on('kanban_board_tasks')->onDelete('cascade');
-            $table->unique(['task_id', 'user_id']);
+            $table->unique(['task_id', 'user_id', 'is_reviewer']);
             $table->index('user_id');
         });
     }

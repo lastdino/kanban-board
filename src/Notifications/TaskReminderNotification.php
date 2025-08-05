@@ -31,7 +31,7 @@ class TaskReminderNotification extends Notification
             ->line('タスク名: ' . $this->task->title)
             ->line('説明: ' . $this->task->description)
             ->line('期限: ' . ($this->task->due_date ? $this->task->due_date->format('Y-m-d H:i') : '未設定'))
-            ->action('タスクを確認', url('/kanban-board/task/' . $this->task->id))
+            ->action('タスクを確認', url('/'.config('kanban-board.routes.prefix').'/board?boardId='.$this->task->column->board->id.'&taskId='.$this->task->id))
             ->line('お忙しい中恐れ入りますが、ご確認をお願いいたします。');
     }
 

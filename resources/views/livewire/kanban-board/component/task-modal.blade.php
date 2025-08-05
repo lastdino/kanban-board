@@ -1,5 +1,5 @@
 <div>
-    <flux:modal name="edit-task" variant="flyout" wire:model="showTaskModal" x-data="{ selectedTab: 'task' }" x-on:close="selectedTab = 'task'">
+    <flux:modal name="edit-task" variant="flyout" x-data="{ selectedTab: 'task' }" x-on:close="selectedTab = 'task'">
         @if($new)
             <flux:heading size="lg">新規タスク</flux:heading>
             <div class="space-y-6 mt-6">

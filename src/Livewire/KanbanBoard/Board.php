@@ -23,6 +23,9 @@ class Board extends Component
 {
     #[Url]
     public $boardId;
+    #[Url]
+    public $taskId;
+
     public $project;
 
     public $NotInvitedUsers;
@@ -50,6 +53,7 @@ class Board extends Component
         $this->users=$this->project->users;
         $this->admin=$this->project->admin;
     }
+
 
     #[Title('かんばんボード')]
     public function render()

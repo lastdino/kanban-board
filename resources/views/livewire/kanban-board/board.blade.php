@@ -1,4 +1,14 @@
 <div class="" x-data="{ selectedTab: 'kanban' }" >
+    <div x-data="{ taskId: @js($taskId) }"
+         x-init="
+        if (taskId) {
+            $nextTick(() => {
+                setTimeout(() => {
+                    $dispatch('show-modal', { id: taskId });
+                }, 500);
+            });
+        }
+     "></div>
     <div class="flex flex-col md:flex-row gap-6 justify-between md:items-center mb-6">
         <flux:breadcrumbs>
             <flux:breadcrumbs.item href="{{route(config('kanban-board.routes.prefix').'.project_list')}}" divider="slash">{{config('kanban-board.name')}}</flux:breadcrumbs.item>

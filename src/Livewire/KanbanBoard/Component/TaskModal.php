@@ -19,7 +19,6 @@ class TaskModal extends Component
 
     public $project;
 
-    public $showTaskModal = false;
     public $editing = false;
 
     public $task = [];
@@ -139,7 +138,7 @@ class TaskModal extends Component
             $this->assigned_user = $this->task->assignedUser;
             $this->completed = $this->task->is_completed;
         }
-        $this->showTaskModal = true;
+        Flux::modal('edit-task')->show();
     }
 
     #[On('show-new-modal')]
@@ -147,7 +146,7 @@ class TaskModal extends Component
         $this->columnId=$columnId;
         $this->new=true;
         $this->reset('title','description','label_color');
-        $this->showTaskModal = true;
+        Flux::modal('edit-task')->show();
     }
 
     public function updated($property){

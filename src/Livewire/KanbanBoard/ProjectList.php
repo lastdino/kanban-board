@@ -4,6 +4,7 @@ namespace Lastdino\KanbanBoard\Livewire\KanbanBoard;
 
 use Lastdino\KanbanBoard\Models\KanbanBoardProject;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
@@ -51,7 +52,7 @@ class ProjectList extends Component
     }
 
 
-
+    #[Title('プロジェクト')]
     public function render()
     {
         return view('kanban-board::livewire.kanban-board.project-list');

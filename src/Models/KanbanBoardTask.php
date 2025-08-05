@@ -35,6 +35,7 @@ class KanbanBoardTask extends Model implements HasMedia
         'due_date' => 'date',
         'reminder_at' => 'datetime',
         'is_completed' => 'boolean',
+        'reminder_sent' => 'boolean',
     ];
 
     protected $withCount = [
@@ -175,6 +176,7 @@ class KanbanBoardTask extends Model implements HasMedia
     public static function needsReminder()
     {
         return static::where('reminder_at', '<=', now())
+            ->where('is_completed', false)
             ->where('reminder_sent', false)
             ->whereNotNull('reminder_at')
             ->get();

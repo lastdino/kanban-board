@@ -112,6 +112,33 @@ return new class extends Migration
             $table->foreign('task_id')->references('id')->on('kanban_board_tasks')->onDelete('cascade');
             $table->index(['task_id', 'position']);
         });
+
+        Schema::create('kanban_board_comments', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('task_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('reply_id')->nullable();
+            $table->text('content');
+            $table->timestamps();
+
+            $table->foreign('task_id')->references('id')->on('kanban_board_tasks')->onDelete('cascade');
+            $table->foreign('reply_id')->references('id')->on('kanban_board_comments')->onDelete('cascade');
+            $table->index('user_id');
+            $table->index('task_id');
+        });
+
+        // タスクフォロワーのテーブル
+        Schema::create('kanban_board_task_followers', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('task_id');
+            $table->unsignedBigInteger('user_id');
+            $table->boolean('is_reviewer')->default(false);
+            $table->timestamps();
+
+            $table->foreign('task_id')->references('id')->on('kanban_board_tasks')->onDelete('cascade');
+            $table->unique(['task_id', 'user_id', 'is_reviewer']);
+            $table->index('user_id');
+        });
     }
 
     /**
@@ -124,5 +151,7 @@ return new class extends Migration
         Schema::dropIfExists('kanban_board_badges');
         Schema::dropIfExists('kanban_board_columns');
         Schema::dropIfExists('kanban_board_projects');
+        Schema::dropIfExists('kanban_board_comments');
+        Schema::dropIfExists('kanban_board_task_followers');
     }
 };

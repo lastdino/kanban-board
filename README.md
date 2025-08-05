@@ -13,6 +13,8 @@ Laravelベースのカンバンボードパッケージです。Livewire 3とFlu
 - Livewire 3.0以上
 - Livewire Flux 2.0以上
 - Spatie Laravel Media Library 11.13以上
+- AlpineJS 3.0以上
+- @alpinejs/sort　3.0以上
 
 ## インストール
 
@@ -50,7 +52,6 @@ php artisan vendor:publish --provider="Lastdino\KanbanBoard\KanbanBoardServicePr
 ### 6. Spatie Media Library の設定
 
 このパッケージはファイル添付機能にSpatie Media Libraryを使用しています。Spatie Media Libraryのインストールと設定については、[公式ドキュメント](https://spatie.be/docs/laravel-medialibrary/v11/installation-setup)を参照してください。
-
 基本的な設定ステップ：
 
 ```bash
@@ -63,6 +64,11 @@ php artisan migrate
 # 設定ファイルを公開（オプション）
 php artisan vendor:publish --provider="Spatie\MediaLibrary\MediaLibraryServiceProvider" --tag="config"
 ```
+
+
+### 7. AlpineJS Sort Plugin のインストール
+このパッケージはドラッグ＆ドロップ機能に '@alpinejs/sort' プラグインを使用しています。AlpineJS Sort Pluginのインストールについては、[公式ドキュメント](https://alpinejs.dev/plugins/sort)を参照してください。
+
 
 ## 機能
 
@@ -111,7 +117,12 @@ return [
 
 ## 使用方法
 
+### タスクリマインダーの送信
 
+期限が近づいているタスクのリマインダーを送信するコマンドを提供しています。
+```bash
+php artisan kanban:send-reminders
+```
 
 ## ライセンス
 

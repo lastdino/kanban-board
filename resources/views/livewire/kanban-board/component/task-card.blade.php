@@ -54,7 +54,7 @@
                 <div class="flex items-center gap-1 mt-2">
                     <flux:text class="text-xs" color="{{ $task->isOverdue() ? 'red' : ($task->isDueSoon() ? 'yellow' : '') }}">
                         <flux:icon name="calendar" class="w-3 h-3 inline"/>
-                        {{ \Carbon\Carbon::parse($task['due_date'])->format('Y/m/d') }}
+                        {{ \Carbon\Carbon::parse($task['due_date'])->format(config('kanban-board.datetime.formats.date')) }}
                     </flux:text>
                 </div>
             @endif

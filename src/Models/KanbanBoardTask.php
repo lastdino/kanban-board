@@ -23,6 +23,7 @@ class KanbanBoardTask extends Model implements HasMedia
         'start_date',
         'due_date',
         'reminder_at',
+        'reminder_sent',
         'label_color',
         'is_completed',
         'created_user_id',
@@ -170,4 +171,21 @@ class KanbanBoardTask extends Model implements HasMedia
 
         return now()->gt($this->due_date);
     }
+
+    public static function needsReminder()
+    {
+        return static::where('reminder_at', '<=', now())
+            ->where('reminder_sent', false)
+            ->whereNotNull('reminder_at')
+            ->get();
+    }
+    /**
+     * リマインダーを送信済みとしてマーク
+     */
+    public function markReminderSent()
+    {
+        $this->update(['reminder_sent' => true]);
+    }
+
+
 }

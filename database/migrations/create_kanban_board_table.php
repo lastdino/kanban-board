@@ -60,6 +60,7 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->date('start_date')->nullable();
             $table->date('due_date')->nullable();
+            $table->boolean('reminder_sent')->default(false);
             $table->dateTime('reminder_at')->nullable();
             $table->string('label_color')->nullable();
             $table->boolean('is_completed')->default(false);

@@ -98,6 +98,7 @@
                             />
                             <flux:input label="開始日" placeholder="" type="date" wire:model.blur="start_date" :disabled="!$this->project->users->where('id', auth()->id())->first()"/>
                             <flux:input label="完了予定" placeholder="" type="date" wire:model.blur="due_date" :disabled="!$this->project->users->where('id', auth()->id())->first()"/>
+                            <flux:input label="リマインド" placeholder="" type="date" wire:model.blur="reminder_at" :disabled="!$this->project->users->where('id', auth()->id())->first()"/>
                             <flux:select wire:model.blur="assigned_user" label="担当者" placeholder="担当者を選択" :disabled="!$this->project->users->where('id', auth()->id())->first()">
                                 @foreach($this->Users as $user)
                                     <flux:select.option value="{{$user->id}}">{{$user->name}}</flux:select.option>

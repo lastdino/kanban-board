@@ -4,6 +4,7 @@ namespace Lastdino\KanbanBoard;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
+use Lastdino\KanbanBoard\Console\Commands\SendTaskReminders;
 use Lastdino\KanbanBoard\Http\Middleware\CheckProjectAccess;
 use Lastdino\KanbanBoard\Helpers\UserDisplayHelper;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Board;
@@ -50,6 +51,12 @@ class KanbanBoardServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'kanban-board');
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'kanban-board');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                SendTaskReminders::class,
+            ]);
+        }
 
     }
 

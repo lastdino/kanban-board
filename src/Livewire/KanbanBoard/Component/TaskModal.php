@@ -133,7 +133,7 @@ class TaskModal extends Component
             $this->description = $this->task->description;
             $this->start_date = $this->task->start_date?->format('Y-m-d');
             $this->due_date = $this->task->due_date?->format('Y-m-d');
-            $this->reminder_at = $this->task->reminder_at;
+            $this->reminder_at = $this->task->reminder_at?->format('Y-m-d');
             $this->label_color = $this->task->label_color;
             $this->assigned_user = $this->task->assignedUser;
             $this->completed = $this->task->is_completed;

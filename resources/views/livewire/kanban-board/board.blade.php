@@ -321,10 +321,10 @@
                             @foreach($column->tasks->where('is_completed', true) as $card)
                                 <tr x-show="showTasks && showCompleted" wire:click="$dispatch('show-modal', { id: {{ $card->id }} })">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->title }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date->format('Y/m/d') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date->format('Y/m/d') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->updated_at->format('Y/m/d') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->assignedUser->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date ? $card->start_date->format(config('kanban-board.datetime.formats.date')) : '' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date ? $card->due_date->format(config('kanban-board.datetime.formats.date'))  : ''}}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->updated_at ? $card->updated_at->format(config('kanban-board.datetime.formats.date'))  : ''}}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->assignedUser ? \Lastdino\KanbanBoard\Helpers\UserDisplayHelper::getDisplayName($card->assignedUser) : ''}}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         @foreach ($card['badges'] as $badge)
                                             <flux:badge :color="$badge['color']"

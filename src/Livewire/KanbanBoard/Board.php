@@ -83,6 +83,11 @@ class Board extends Component
         $this->NotInvitedUsers=$this->project->NotInvitedUsers();
         $this->users=$this->project->users;
     }
+    public function removeUser($userId){
+        $this->project->users()->detach($userId);
+        $this->NotInvitedUsers=$this->project->NotInvitedUsers();
+        $this->users=$this->project->users;
+    }
 
 
     /**

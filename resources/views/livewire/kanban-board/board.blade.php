@@ -11,14 +11,17 @@
             </flux:radio.group>
 
             <flux:separator vertical class="my-2" />
-            <flux:avatar.group>
-                @foreach ($users->take(3) as $user)
-                    <flux:avatar size="sm" tooltip name="{{ $user->name }}" src="{{$user->getUserAvatar}}" />
-                @endforeach
-                @if($users->count()-3 >= 1 && $users->count() != 0)
-                     <flux:avatar size="sm">{{$users->count()-3}}+</flux:avatar>
-                @endif
-            </flux:avatar.group>
+            <flux:modal.trigger name="users">
+                <flux:avatar.group>
+                    @foreach ($users->take(3) as $user)
+                        <flux:avatar size="sm" tooltip name="{{ \Lastdino\KanbanBoard\Helpers\UserDisplayHelper::getDisplayName($user) }}" src="{{$user->getUserAvatar}}" />
+                    @endforeach
+                    @if($users->count()-3 >= 1 && $users->count() != 0)
+                            <flux:avatar size="sm">{{$users->count()-3}}+</flux:avatar>
+                    @endif
+                </flux:avatar.group>
+            </flux:modal.trigger>
+
             <flux:modal.trigger name="invite">
                 @if($this->project->admin->id === auth()->id())
                     <flux:button variant="filled" size="sm">招待</flux:button>
@@ -41,6 +44,23 @@
                     <div class="flex">
                         <flux:spacer />
                         <flux:button type="submit" variant="primary" wire:click="invite">招待</flux:button>
+                    </div>
+                </div>
+            </flux:modal>
+            <flux:modal name="users" class="md:w-96">
+                <div class="space-y-6">
+                    <div>
+                        <flux:heading size="lg">ユーザーリスト</flux:heading>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        @foreach($users as $user)
+                            <div class="flex ">
+                                <flux:avatar size="sm" tooltip name="{{ \Lastdino\KanbanBoard\Helpers\UserDisplayHelper::getDisplayName($user) }}" src="{{$user->getUserAvatar}}" />
+                                <flux:tooltip content="削除">
+                                    <flux:button icon="x-mark" variant="subtle" inset wire:click="removeUser({{$user->id}})"/>
+                                </flux:tooltip>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </flux:modal>

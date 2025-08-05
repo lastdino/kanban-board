@@ -23,6 +23,13 @@
                                 placeholder="プロジェクトの説明を記入"
                                 wire:model="description"
                             />
+
+                            <flux:field variant="inline">
+                                <flux:label>非公開</flux:label>
+                                <flux:switch wire:model.live="is_private" />
+                                <flux:error name="is_private" />
+                            </flux:field>
+
                             @if($editMode)
                                 <flux:select wire:model="user_id">
                                     @foreach($users as $user)

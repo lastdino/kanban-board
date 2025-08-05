@@ -22,6 +22,7 @@ class ProjectList extends Component
     public $editMode = false;
     public $currentProject = null;
     public $user_id=null;
+    public $is_private=false;
     public $users;
 
 
@@ -79,6 +80,7 @@ class ProjectList extends Component
             'title' => $this->title,
             'description' => $this->description,
             'user_id' => auth()->id(),
+            'is_private' => $this->is_private,
         ]);
 
         $project->users()->attach(auth()->id());
@@ -94,6 +96,7 @@ class ProjectList extends Component
         $this->description = $this->currentProject->description;
         $this->user_id = $this->currentProject->user_id;
         $this->users=$this->currentProject->users;
+        $this->is_private=$this->currentProject->is_private;
         $this->editMode = true;
         Flux::modal('add-project')->show();
     }

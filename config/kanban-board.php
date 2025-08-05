@@ -18,7 +18,7 @@ return [
     */
     'routes' => [
         'prefix' => 'kanban',
-        'middleware' => ['web'],
+        'middleware' => ['web','auth:web'],
         'guards' => ['web'],
     ],
 
@@ -51,5 +51,7 @@ return [
         'display_name_column' => 'Full_name',  // Default display name column
         'fallback_columns' => ['full_name', 'display_name','name', ], // Fallback columns array
     ],
+
+    'name' => 'Kanban Board',
 
 ];

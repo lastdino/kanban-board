@@ -1,18 +1,18 @@
 <div class="flex items-center p-2 gap-2  bg-zinc-400/5 dark:bg-zinc-900 border rounded-lg ">
     @if($item->is_completed)
         <flux:tooltip content="クリックして未完了">
-            <flux:checkbox wire:model.live.debounce="completed" />
+            <flux:checkbox wire:model.live.debounce="completed" :disabled="!$this->project->users->where('id', auth()->id())->first()"/>
         </flux:tooltip>
     @else
         <flux:tooltip content="クリックして完了">
-            <flux:checkbox wire:model.live.debounce="completed" />
+            <flux:checkbox wire:model.live.debounce="completed" :disabled="!$this->project->users->where('id', auth()->id())->first()"/>
         </flux:tooltip>
     @endif
     <flux:separator vertical />
     <div class="w-full" wire:click="$dispatch('show-modal', { id: {{ $item->id }} })">{{ $title }}</div>
     <div>
         <flux:dropdown>
-            <flux:button icon="ellipsis-vertical" size="xs" variant="subtle"></flux:button>
+            <flux:button icon="ellipsis-vertical" size="xs" variant="subtle" :disabled="!$this->project->users->where('id', auth()->id())->first()"></flux:button>
             <flux:menu>
                 <flux:menu.item icon="arrows-right-left" x-on:click="$flux.modal('main-task-{{ $item->id }}').show()">メインタスクの変更</flux:menu.item>
                 <flux:menu.item icon="scissors" wire:click="$parent.unlinkMainTask({{ $item->id }})">メインタスクとの紐付け解除</flux:menu.item>

@@ -12,6 +12,11 @@ class KanbanBoardProject extends Model
         'title',
         'description',
         'user_id',
+        'is_private',
+    ];
+
+    protected $casts = [
+        'is_private' => 'boolean',
     ];
 
     public function columns(): HasMany

@@ -1,30 +1,31 @@
 <div>
     <div class="flex flex-col gap-4 mt-2">
-        <div class="space-y-6" x-data="dragdrop">
-            <div
-                x-on:dragover.prevent="dragging = true"
-                x-on:dragleave="dragging = false"
-                x-on:drop.prevent="handleDrop($event)"
-                :class="{ 'bg-lime-500': dragging }"
-            >
-                <div class="border border-dashed border-gray-400 h-32 flex flex-col items-center justify-center"
-                     x-on:click="$refs.fileInput.click()"
+        @if($this->project->users->where('id', auth()->id())->first())
+            <div class="space-y-6" x-data="dragdrop">
+                <div
+                    x-on:dragover.prevent="dragging = true"
+                    x-on:dragleave="dragging = false"
+                    x-on:drop.prevent="handleDrop($event)"
+                    :class="{ 'bg-lime-500': dragging }"
                 >
-                    <flux:text>ドラッグ＆ドロップしてファイルをアップロード</flux:text>
-                    <flux:text>クリックでファイル選択</flux:text>
+                    <div class="border border-dashed border-gray-400 h-32 flex flex-col items-center justify-center"
+                         x-on:click="$refs.fileInput.click()"
+                    >
+                        <flux:text>ドラッグ＆ドロップしてファイルをアップロード</flux:text>
+                        <flux:text>クリックでファイル選択</flux:text>
 
+                    </div>
+                    <input type="file"  multiple x-on:change="handleFileInput($event)" x-ref="fileInput" style="display:none">
+                    @error('files.*')
+                    <span class="block sm:inline text-red-700">{{ $message }}</span>
+                    @enderror
                 </div>
-                <input type="file"  multiple x-on:change="handleFileInput($event)" x-ref="fileInput" style="display:none">
-                @error('files.*')
-                <span class="block sm:inline text-red-700">{{ $message }}</span>
-                @enderror
+                <flux:separator />
+                <div x-show="isUploading"  class="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
+                    <div class="bg-blue-500 h-full transition-all duration-300 rounded-full" :style="`width: ${progress}%`"></div>
+                </div>
             </div>
-            <flux:separator />
-            <div x-show="isUploading"  class="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
-                <div class="bg-blue-500 h-full transition-all duration-300 rounded-full" :style="`width: ${progress}%`"></div>
-            </div>
-        </div>
-
+        @endif
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             @foreach($files as $file)
                 <flux:callout icon="document">
@@ -34,7 +35,7 @@
                         </div>
                         <div class="">
                             <flux:dropdown>
-                                <flux:button icon="ellipsis-horizontal" size="sm" variant="subtle"></flux:button>
+                                <flux:button icon="ellipsis-horizontal" size="sm" variant="subtle" :disabled="!$this->project->users->where('id', auth()->id())->first()"></flux:button>
                                 <flux:menu>
                                     <flux:menu.item icon="arrow-down-tray" href="{{$this->temporaryURL($file->id)}}">
                                         ダウンロード

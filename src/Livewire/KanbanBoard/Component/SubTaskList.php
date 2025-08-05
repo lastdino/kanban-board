@@ -14,10 +14,12 @@ class SubTaskList extends Component
     public $item;
     public $title;
     public $completed;
+    public $project;
 
     public $search;
 
     public function mount(){
+        $this->project=$this->item->column->board;
     }
 
     #[Computed]

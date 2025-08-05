@@ -16,17 +16,19 @@
                 @endforeach
             </div>
             <div class="flex items-center gap-2">
-                <div x-on:click.stop>
-                    @if($task->is_completed)
-                        <flux:tooltip content="クリックして未完了">
-                            <flux:checkbox wire:model.live.debounce="completed" />
-                        </flux:tooltip>
-                    @else
-                        <flux:tooltip content="クリックして完了">
-                            <flux:checkbox wire:model.live.debounce="completed" />
-                        </flux:tooltip>
-                    @endif
-                </div>
+                @if($this->project->users->where('id', auth()->id())->first())
+                    <div x-on:click.stop>
+                        @if($task->is_completed)
+                            <flux:tooltip content="クリックして未完了">
+                                <flux:checkbox wire:model.live.debounce="completed" />
+                            </flux:tooltip>
+                        @else
+                            <flux:tooltip content="クリックして完了">
+                                <flux:checkbox wire:model.live.debounce="completed" />
+                            </flux:tooltip>
+                        @endif
+                    </div>
+                @endif
                 <flux:heading>#{{$task['id']}}{{ $task['title'] }}</flux:heading>
             </div>
             @if($task['label_color'])

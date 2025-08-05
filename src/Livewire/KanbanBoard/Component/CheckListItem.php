@@ -14,6 +14,11 @@ class CheckListItem extends Component
     public $not_edit=false;
     public $content;
     public $completed;
+    public $project;
+
+    public function mount(){
+        $this->project=$this->item->task->column->board;
+    }
 
     public function updated($property){
         match ($property) {

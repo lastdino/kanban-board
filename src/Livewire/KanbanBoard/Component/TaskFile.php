@@ -21,10 +21,13 @@ class TaskFile extends Component
     public $files=[];
     public $up_files;
 
+    public $project;
+
 
     public function mount()
     {
         $this->files=Task::find($this->taskId)->getMedia('task');
+        $this->project=Task::find($this->taskId)->column->board;
     }
 
     #[On('refresh-file')]

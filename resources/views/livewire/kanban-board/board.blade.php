@@ -1,7 +1,7 @@
 <div class="" x-data="{ selectedTab: 'kanban' }" >
     <div class="flex flex-col md:flex-row gap-6 justify-between md:items-center mb-6">
         <flux:breadcrumbs>
-            <flux:breadcrumbs.item href="#" divider="slash">xxx Inc.</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="{{route(config('kanban-board.routes.prefix').'.project_list')}}" divider="slash">{{config('kanban-board.name')}}</flux:breadcrumbs.item>
             <flux:breadcrumbs.item href="" divider="slash">{{$project->title}}</flux:breadcrumbs.item>
         </flux:breadcrumbs>
         <div class="flex gap-4">
@@ -65,36 +65,39 @@
                                             @endif
                                         </div>
                                         <div>
-                                            <flux:button variant="subtle" icon="plus" size="sm" tooltip="タスクを追加" wire:click="dispatchTo('kanban-board.component.task-modal', 'show-new-modal',{columnId: {{ $column->id }}})"/>
-                                            <flux:dropdown>
-                                                <flux:button icon="ellipsis-horizontal" size="sm" variant="subtle"></flux:button>
-                                                <flux:menu>
-                                                    <flux:field>
-                                                        <flux:label>ラベル</flux:label>
-                                                        <div class="flex gap-2">
-                                                            <flux:button variant="primary" size="xs" color="violet" wire:click="setLabelColor('violet',{{$column}})" icon="check" icon:class="{{$column->color == 'violet' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
-                                                            <flux:button variant="primary" size="xs" color="blue" wire:click="setLabelColor('blue',{{$column}})" icon="check"
-                                                                         icon:class="{{$column->color == 'blue' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
-                                                            <flux:button variant="primary" size="xs" color="green" wire:click="setLabelColor('green',{{$column}})" icon="check"
-                                                                         icon:class="{{$column->color == 'green' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
-                                                            <flux:button variant="primary" size="xs" color="yellow" wire:click="setLabelColor('yellow',{{$column}})"
-                                                                         icon="check"
-                                                                         icon:class="{{$column->color == 'yellow' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
-                                                            <flux:button variant="primary" size="xs" color="orange" wire:click="setLabelColor('orange',{{$column}})"
-                                                                         icon="check"
-                                                                         icon:class="{{$column->color == 'orange' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
-                                                            <flux:button variant="primary" size="xs" color="red" wire:click="setLabelColor('red',{{$column}})" icon="check"
-                                                                         icon:class="{{$column->color == 'red' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
-                                                            <flux:button variant="primary" size="xs" color="pink" wire:click="setLabelColor('pink',{{$column}})" icon="check"
-                                                                         icon:class="{{$column->color == 'pink' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
-                                                            <flux:button variant="primary" size="xs" color="zinc" wire:click="setLabelColor('zinc',{{$column}})" icon="check"
-                                                                         icon:class="{{$column->color == 'zinc' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
-                                                        </div>
-                                                    </flux:field>
-                                                    <flux:menu.separator />
-                                                    <flux:menu.item icon="trash" variant="danger" wire:click="removeColumn({{$column->id}})">削除</flux:menu.item>
-                                                </flux:menu>
-                                            </flux:dropdown>
+                                            @if($this->project->users->where('id', auth()->id())->first())
+                                                <flux:button variant="subtle" icon="plus" size="sm" tooltip="タスクを追加"
+                                                             wire:click="dispatchTo('kanban-board.component.task-modal', 'show-new-modal',{columnId: {{ $column->id }}})"/>
+                                                <flux:dropdown>
+                                                    <flux:button icon="ellipsis-horizontal" size="sm" variant="subtle"></flux:button>
+                                                    <flux:menu>
+                                                        <flux:field>
+                                                            <flux:label>ラベル</flux:label>
+                                                            <div class="flex gap-2">
+                                                                <flux:button variant="primary" size="xs" color="violet" wire:click="setLabelColor('violet',{{$column}})" icon="check" icon:class="{{$column->color == 'violet' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
+                                                                <flux:button variant="primary" size="xs" color="blue" wire:click="setLabelColor('blue',{{$column}})" icon="check"
+                                                                             icon:class="{{$column->color == 'blue' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
+                                                                <flux:button variant="primary" size="xs" color="green" wire:click="setLabelColor('green',{{$column}})" icon="check"
+                                                                             icon:class="{{$column->color == 'green' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
+                                                                <flux:button variant="primary" size="xs" color="yellow" wire:click="setLabelColor('yellow',{{$column}})"
+                                                                             icon="check"
+                                                                             icon:class="{{$column->color == 'yellow' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
+                                                                <flux:button variant="primary" size="xs" color="orange" wire:click="setLabelColor('orange',{{$column}})"
+                                                                             icon="check"
+                                                                             icon:class="{{$column->color == 'orange' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
+                                                                <flux:button variant="primary" size="xs" color="red" wire:click="setLabelColor('red',{{$column}})" icon="check"
+                                                                             icon:class="{{$column->color == 'red' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
+                                                                <flux:button variant="primary" size="xs" color="pink" wire:click="setLabelColor('pink',{{$column}})" icon="check"
+                                                                             icon:class="{{$column->color == 'pink' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
+                                                                <flux:button variant="primary" size="xs" color="zinc" wire:click="setLabelColor('zinc',{{$column}})" icon="check"
+                                                                             icon:class="{{$column->color == 'zinc' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
+                                                            </div>
+                                                        </flux:field>
+                                                        <flux:menu.separator />
+                                                        <flux:menu.item icon="trash" variant="danger" wire:click="removeColumn({{$column->id}})">削除</flux:menu.item>
+                                                    </flux:menu>
+                                                </flux:dropdown>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="px-4 flex justify-between items-end">
@@ -154,7 +157,7 @@
                         @endforeach
                     </div>
                     <div class="rounded-lg w-80 max-w-80  bg-zinc-400/5 dark:bg-zinc-900 flex flex-row gap-2 flex-none p-2 h-12 justify-between items-center" x-data="{ open: false }">
-                        <flux:button variant="subtle" icon="plus" size="sm" tooltip="タスクリストを追加" x-on:click="open = ! open" x-show="!open">タスクリストの追加</flux:button>
+                        <flux:button variant="subtle" icon="plus" size="sm" tooltip="タスクリストを追加" x-on:click="open = ! open" x-show="!open" :disabled="!$this->project->users->where('id', auth()->id())->first()">タスクリストの追加</flux:button>
                         <flux:input wire:model="column_title" wire:keydown.enter="addColumn" @keyup.enter="open = ! open"  @click.outside="open = false" x-init="$nextTick(() => $el.focus())" x-show="open"/>
                     </div>
                 </div>
@@ -233,10 +236,14 @@
                                 @foreach($column->tasks->where('is_completed', false)->sortBy($sortBy) as $card)
                                     <tr x-show="showTasks" wire:click="$dispatch('show-modal', { id: {{ $card->id }} })">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->title }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date->format('Y/m/d') }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date->format('Y/m/d') }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->assignedUser->name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date ? $card->start_date->format(config('kanban-board.datetime.formats.date')) : '' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date ? $card->due_date->format(config('kanban-board.datetime.formats.date'))  : ''}}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            @if($card->is_completed)
+                                                {{ $card->updated_at ? $card->updated_at->format(config('kanban-board.datetime.formats.date'))  : ''}}
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->assignedUser ? \Lastdino\KanbanBoard\Helpers\UserDisplayHelper::getDisplayName($card->assignedUser) : ''}}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             @foreach ($card['badges'] as $badge)
                                                 <flux:badge :color="$badge['color']"
@@ -249,10 +256,14 @@
                                 @foreach($column->tasks->where('is_completed', false)->sortByDesc($sortBy) as $card)
                                     <tr x-show="showTasks" wire:click="$dispatch('show-modal', { id: {{ $card->id }} })">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->title }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date->format('Y/m/d') }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date->format('Y/m/d') }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->updated_at->format('Y/m/d') }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->assignedUser->name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date ? $card->start_date->format(config('kanban-board.datetime.formats.date')) : '' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date ? $card->due_date->format(config('kanban-board.datetime.formats.date'))  : ''}}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            @if($card->is_completed)
+                                                {{ $card->updated_at ? $card->updated_at->format(config('kanban-board.datetime.formats.date'))  : ''}}
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->assignedUser ? \Lastdino\KanbanBoard\Helpers\UserDisplayHelper::getDisplayName($card->assignedUser) : ''}}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             @foreach ($card['badges'] as $badge)
                                                 <flux:badge :color="$badge['color']"

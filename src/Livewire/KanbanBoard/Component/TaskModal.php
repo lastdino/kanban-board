@@ -17,6 +17,8 @@ class TaskModal extends Component
 {
     public $boardId;
 
+    public $project;
+
     public $showTaskModal = false;
     public $editing = false;
 
@@ -27,7 +29,7 @@ class TaskModal extends Component
     public $due_date;
     public $reminder_at;
     public $label_color=null;
-    public $assigned_user;
+    public $assigned_user=null;
     public $checkItem;
     public $subTitle='';
     public $completed;
@@ -127,6 +129,7 @@ class TaskModal extends Component
         $this->new=false;
         if($id){
             $this->task=Task::with(['badges','subtasks','checklistItems','comments'])->find($id);
+            $this->project=$this->task->column->board;
             $this->title = $this->task->title;
             $this->description = $this->task->description;
             $this->start_date = $this->task->start_date?->format('Y-m-d');
@@ -178,6 +181,7 @@ class TaskModal extends Component
             'position' => $maxPosition + 1,
             'label_color' => $this->label_color,
             'created_user_id'=>auth()->id(),
+            'assigned_user_id'=>auth()->id(),
         ]);
 
         $this->dispatch('refresh-columns')->to(Board::class);
@@ -289,6 +293,7 @@ class TaskModal extends Component
             'sub_position'=>$this->task->subtasks->count(),
             'parent_id'=>$this->task->id,
             'created_user_id'=>auth()->id(),
+            'assigned_user_id'=>auth()->id(),
         ]);
         $this->subTitle = '';
         $this->refreshTask();

@@ -14,7 +14,7 @@ class UserDisplayHelper
         }
 
         // メインの表示名カラムを取得
-        $mainColumn = config('approval-flow.user.display_name_column', 'name');
+        $mainColumn = config('kanban-board.user.display_name_column', 'name');
 
         // メインカラムが存在する場合はそれを返す
         if (isset($user[$mainColumn]) && !empty($user[$mainColumn])) {
@@ -22,7 +22,7 @@ class UserDisplayHelper
         }
 
         // フォールバックカラムを順番に試す
-        $fallbackColumns = config('approval-flow.user.fallback_columns', ['Full_name', 'full_name', 'display_name']);
+        $fallbackColumns = config('kanban-board.user.fallback_columns', ['Full_name', 'full_name', 'display_name']);
 
         foreach ($fallbackColumns as $column) {
             if (isset($user[$column]) && !empty($user[$column])) {

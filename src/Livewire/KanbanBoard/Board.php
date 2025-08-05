@@ -43,9 +43,8 @@ class Board extends Component
 
     public $column_title_edit;
 
-    public function mount($boardId = null)
+    public function mount()
     {
-        $this->boardId = $boardId ?? 1; // デフォルトボード
         $this->project=Project::find($this->boardId);
         $this->NotInvitedUsers=$this->project->NotInvitedUsers();
         $this->users=$this->project->users;

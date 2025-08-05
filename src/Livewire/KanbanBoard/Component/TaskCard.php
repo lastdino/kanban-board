@@ -11,7 +11,11 @@ class TaskCard extends Component
 {
     public $task;
     public $completed;
+    public $project;
 
+    public function mount(){
+        $this->project=$this->task->column->board;
+    }
 
     public function updated($property){
         match ($property) {

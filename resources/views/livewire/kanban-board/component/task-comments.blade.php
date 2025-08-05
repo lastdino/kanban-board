@@ -4,7 +4,7 @@
             <flux:callout >
                 <div class="flex justify-between">
                     <flux:callout.heading>
-                        <flux:avatar size="sm" tooltip name="{{ $comment->user->name }}" src="{{$comment->user->getUserAvatar}}" />
+                        <flux:avatar size="sm" tooltip name="{{ $comment->user->name }}" src="{{$comment->user->getUserAvatar()}}" />
                         {{ $comment->user->name }}
                         <flux:text class="text-xs">{{ $comment->created_at->diffForHumans() }}</flux:text>
                     </flux:callout.heading>
@@ -20,7 +20,7 @@
                         <flux:callout >
                             <div class="flex justify-between">
                                 <flux:callout.heading>
-                                    <flux:avatar size="sm" tooltip name="{{ $comment->reply->user->name }}" src="{{$comment->reply->user->getUserAvatar}}" />
+                                    <flux:avatar size="sm" tooltip name="{{ $comment->reply->user->name }}" src="{{$comment->reply->user->getUserAvatar()}}" />
                                     {{ $comment->reply->user->name }}
                                     <flux:text class="text-xs">{{ $comment->reply->created_at->diffForHumans() }}</flux:text>
                                 </flux:callout.heading>

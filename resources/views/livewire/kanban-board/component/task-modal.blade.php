@@ -111,7 +111,7 @@
                                     <flux:button variant="subtle" icon="plus" size="sm" tooltip="レビュワーを追加"  wire:click="openReviewerModal" :disabled="!$this->project->users->where('id', auth()->id())->first()"/>
                                     @foreach($task->reviewers as $reviewer)
                                         <div class="flex items-center gap-2 sm:gap-4 relative" >
-                                            <flux:avatar size="sm" tooltip name="{{ $reviewer->name }}" src="{{$reviewer->getUserAvatar}}" />
+                                            <flux:avatar size="sm" tooltip name="{{ $reviewer->name }}" src="{{$reviewer->getUserAvatar()}}" />
                                             <div class="absolute -top-2 -right-2">
                                                 @if($this->project->users->where('id', auth()->id())->first())
                                                     <flux:icon.x-mark class="size-5 pl-2" wire:click="removeReviewer({{ $reviewer->id }})"/>
@@ -150,7 +150,7 @@
                                     <flux:button variant="subtle" icon="plus" size="sm" tooltip="フォロワーを追加"  wire:click="openFollowerModal" :disabled="!$this->project->users->where('id', auth()->id())->first()"/>
                                     @foreach($task->followers as $follower)
                                         <div class="flex items-center gap-2 sm:gap-4 relative" >
-                                            <flux:avatar size="sm" tooltip name="{{ $follower->name }}" src="{{$follower->getUserAvatar}}" />
+                                            <flux:avatar size="sm" tooltip name="{{ $follower->name }}" src="{{$follower->getUserAvatar()}}" />
                                             <div class="absolute -top-2 -right-2">
                                                 @if($this->project->users->where('id', auth()->id())->first())
                                                     <flux:icon.x-mark class="size-5 pl-2" wire:click="removeFollower({{ $follower->id }})"/>

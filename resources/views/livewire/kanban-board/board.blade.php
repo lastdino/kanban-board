@@ -14,7 +14,7 @@
             <flux:modal.trigger name="users">
                 <flux:avatar.group>
                     @foreach ($users->take(3) as $user)
-                        <flux:avatar size="sm" tooltip name="{{ \Lastdino\KanbanBoard\Helpers\UserDisplayHelper::getDisplayName($user) }}" src="{{$user->getUserAvatar}}" />
+                        <flux:avatar size="sm" tooltip name="{{ \Lastdino\KanbanBoard\Helpers\UserDisplayHelper::getDisplayName($user) }}" src="{{$user->getUserAvatar()}}" />
                     @endforeach
                     @if($users->count()-3 >= 1 && $users->count() != 0)
                             <flux:avatar size="sm">{{$users->count()-3}}+</flux:avatar>
@@ -55,7 +55,7 @@
                     <div class="flex flex-col gap-2">
                         @foreach($users as $user)
                             <div class="flex ">
-                                <flux:avatar size="sm" tooltip name="{{ \Lastdino\KanbanBoard\Helpers\UserDisplayHelper::getDisplayName($user) }}" src="{{$user->getUserAvatar}}" />
+                                <flux:avatar size="sm" tooltip name="{{ \Lastdino\KanbanBoard\Helpers\UserDisplayHelper::getDisplayName($user) }}" src="{{$user->getUserAvatar()}}" />
                                 <flux:tooltip content="削除">
                                     <flux:button icon="x-mark" variant="subtle" inset wire:click="removeUser({{$user->id}})"/>
                                 </flux:tooltip>

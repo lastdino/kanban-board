@@ -177,7 +177,7 @@ class TaskModal extends Component
             'title' => $this->title,
             'description' => $this->description,
             'column_id' => $this->columnId,
-            'position' => $maxPosition + 1,
+            'position' => $maxPosition,
             'label_color' => $this->label_color,
             'created_user_id'=>auth()->id(),
             'assigned_user_id'=>auth()->id(),

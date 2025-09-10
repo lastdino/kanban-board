@@ -1,4 +1,5 @@
 <?php
+
 namespace Lastdino\KanbanBoard\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ class KanbanBoardColumn extends Model
 
     public function board(): BelongsTo
     {
-        return $this->belongsTo(KanbanBoardProject::class,'board_id');
+        return $this->belongsTo(KanbanBoardProject::class, 'board_id');
     }
 
     public function tasks(): HasMany

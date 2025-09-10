@@ -26,11 +26,11 @@ class TaskReminderNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('タスクリマインダー: ' . $this->task->title)
+            ->subject('タスクリマインダー: '.$this->task->title)
             ->line('以下のタスクのリマインダー日時になりました。')
-            ->line('タスク名: ' . $this->task->title)
-            ->line('説明: ' . $this->task->description)
-            ->line('期限: ' . ($this->task->due_date ? $this->task->due_date->format('Y-m-d H:i') : '未設定'))
+            ->line('タスク名: '.$this->task->title)
+            ->line('説明: '.$this->task->description)
+            ->line('期限: '.($this->task->due_date ? $this->task->due_date->format('Y-m-d H:i') : '未設定'))
             ->action('タスクを確認', url('/'.config('kanban-board.routes.prefix').'/board?boardId='.$this->task->column->board->id.'&taskId='.$this->task->id))
             ->line('お忙しい中恐れ入りますが、ご確認をお願いいたします。');
     }
@@ -40,7 +40,7 @@ class TaskReminderNotification extends Notification
         return [
             'task_id' => $this->task->id,
             'title' => $this->task->title,
-            'message' => 'タスク「' . $this->task->title . '」のリマインダー日時になりました。',
+            'message' => 'タスク「'.$this->task->title.'」のリマインダー日時になりました。',
         ];
     }
 }

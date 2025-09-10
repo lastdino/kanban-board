@@ -3,13 +3,13 @@
 namespace Lastdino\KanbanBoard\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Notification;
 use Lastdino\KanbanBoard\Models\KanbanBoardTask;
 use Lastdino\KanbanBoard\Notifications\TaskReminderNotification;
 
 class SendTaskReminders extends Command
 {
     protected $signature = 'kanban:send-reminders';
+
     protected $description = 'タスクのリマインダー通知を送信します';
 
     public function handle()
@@ -17,7 +17,7 @@ class SendTaskReminders extends Command
         $tasks = KanbanBoardTask::needsReminder();
 
         if ($tasks->isEmpty()) {
-            //$this->info('送信するリマインダーはありません。');
+            // $this->info('送信するリマインダーはありません。');
             return;
         }
 
@@ -35,9 +35,9 @@ class SendTaskReminders extends Command
             // リマインダー送信済みとしてマーク
             $task->markReminderSent();
 
-            //$this->info("タスク「{$task->title}」のリマインダーを送信しました。");
+            // $this->info("タスク「{$task->title}」のリマインダーを送信しました。");
         }
 
-        //$this->info("合計 {$tasks->count()} 件のリマインダーを送信しました。");
+        // $this->info("合計 {$tasks->count()} 件のリマインダーを送信しました。");
     }
 }

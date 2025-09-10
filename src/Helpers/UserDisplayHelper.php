@@ -9,7 +9,7 @@ class UserDisplayHelper
      */
     public static function getDisplayName($user): string
     {
-        if (!$user) {
+        if (! $user) {
             return '';
         }
 
@@ -17,7 +17,7 @@ class UserDisplayHelper
         $mainColumn = config('kanban-board.user.display_name_column', 'name');
 
         // メインカラムが存在する場合はそれを返す
-        if (isset($user[$mainColumn]) && !empty($user[$mainColumn])) {
+        if (isset($user[$mainColumn]) && ! empty($user[$mainColumn])) {
             return $user[$mainColumn];
         }
 
@@ -25,7 +25,7 @@ class UserDisplayHelper
         $fallbackColumns = config('kanban-board.user.fallback_columns', ['Full_name', 'full_name', 'display_name']);
 
         foreach ($fallbackColumns as $column) {
-            if (isset($user[$column]) && !empty($user[$column])) {
+            if (isset($user[$column]) && ! empty($user[$column])) {
                 return $user[$column];
             }
         }

@@ -2,32 +2,30 @@
 
 namespace Lastdino\KanbanBoard\Livewire\KanbanBoard\Component;
 
-use Illuminate\Database\Eloquent\Model;
+use Lastdino\KanbanBoard\Models\KanbanBoardTask as Task;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
-use Lastdino\KanbanBoard\Models\KanbanBoardTask as Task;
-use Flux\Flux;
 
 class TaskComments extends Component
 {
     #[Reactive]
     public $taskId;
 
-    public $comments=[];
-    public $commentContent;
-    public $replycommentId;
+    public $comments = [];
 
+    public $commentContent;
+
+    public $replycommentId;
 
     public function mount()
     {
-        $this->comments=Task::find($this->taskId)->comments;
+        $this->comments = Task::find($this->taskId)->comments;
     }
-
 
     public function addComment()
     {
-        if (!$this->commentContent) {
+        if (! $this->commentContent) {
             return;
         }
 
@@ -35,19 +33,18 @@ class TaskComments extends Component
             'commentContent' => 'required',
         ]);
 
-
         $task = Task::find($this->taskId);
 
-        if($this->replycommentId){
+        if ($this->replycommentId) {
             $task->comments()->create([
                 'content' => $this->commentContent,
                 'user_id' => auth()->id(),
-                'reply_id' => $this->replycommentId
+                'reply_id' => $this->replycommentId,
             ]);
-        }else{
+        } else {
             $task->comments()->create([
                 'content' => $this->commentContent,
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
         }
         $this->comments = $task->comments;
@@ -61,8 +58,9 @@ class TaskComments extends Component
     }
 
     #[On('show-modal')]
-    public function reload($id){
-        $this->comments=Task::find($id)->comments;
+    public function reload($id)
+    {
+        $this->comments = Task::find($id)->comments;
     }
 
     public function render()

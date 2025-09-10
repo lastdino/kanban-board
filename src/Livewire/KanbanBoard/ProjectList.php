@@ -2,36 +2,41 @@
 
 namespace Lastdino\KanbanBoard\Livewire\KanbanBoard;
 
+use Flux\Flux;
 use Lastdino\KanbanBoard\Models\KanbanBoardProject;
-use Livewire\Attributes\Url;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Computed;
-
-use Flux\Flux;
 
 class ProjectList extends Component
 {
     use WithPagination;
 
     public $search = '';
+
     public $sortBy = 'created_at';
+
     public $sortDirection = 'desc';
+
     public $title = '';
+
     public $description = '';
+
     public $editMode = false;
+
     public $currentProject = null;
-    public $user_id=null;
-    public $is_private=false;
+
+    public $user_id = null;
+
+    public $is_private = false;
+
     public $users;
 
+    public function mount() {}
 
-    public function mount()
+    public function sort($column)
     {
-    }
-
-    public function sort($column) {
         if ($this->sortBy === $column) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
         } else {
@@ -40,17 +45,16 @@ class ProjectList extends Component
         }
     }
 
-
     #[Computed]
     public function projects()
     {
         $perPage = 25;
+
         return KanbanBoardProject::query()
             ->tap(fn ($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
-            ->tap(fn ($query) => $this->search ? $query->where('title', 'like', '%' . $this->search . '%') : $query)
+            ->tap(fn ($query) => $this->search ? $query->where('title', 'like', '%'.$this->search.'%') : $query)
             ->paginate($perPage);
     }
-
 
     #[Title('プロジェクト')]
     public function render()
@@ -62,8 +66,6 @@ class ProjectList extends Component
     {
         $this->reset(['search']);
     }
-
-
 
     public function resetForm()
     {
@@ -77,7 +79,7 @@ class ProjectList extends Component
             'description' => 'nullable|string',
         ]);
 
-        $project=KanbanBoardProject::create([
+        $project = KanbanBoardProject::create([
             'title' => $this->title,
             'description' => $this->description,
             'user_id' => auth()->id(),
@@ -96,8 +98,8 @@ class ProjectList extends Component
         $this->title = $this->currentProject->title;
         $this->description = $this->currentProject->description;
         $this->user_id = $this->currentProject->user_id;
-        $this->users=$this->currentProject->users;
-        $this->is_private=$this->currentProject->is_private;
+        $this->users = $this->currentProject->users;
+        $this->is_private = $this->currentProject->is_private;
         $this->editMode = true;
         Flux::modal('add-project')->show();
     }
@@ -124,6 +126,4 @@ class ProjectList extends Component
     {
         return redirect()->route(config('kanban-board.routes.prefix').'.board', ['boardId' => $projectId]);
     }
-
-
 }

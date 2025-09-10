@@ -2,7 +2,6 @@
 
 namespace Lastdino\KanbanBoard\Livewire\KanbanBoard\Component;
 
-use Illuminate\Database\Eloquent\Model;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Board;
 use Lastdino\KanbanBoard\Models\KanbanBoardTask as Task;
 use Livewire\Component;
@@ -10,21 +9,26 @@ use Livewire\Component;
 class TaskCard extends Component
 {
     public $task;
+
     public $completed;
+
     public $project;
 
-    public function mount(){
-        $this->project=$this->task->column->board;
+    public function mount()
+    {
+        $this->project = $this->task->column->board;
     }
 
-    public function updated($property){
+    public function updated($property)
+    {
         match ($property) {
             'completed' => $this->TaskCompleted(),
             default => null,
         };
     }
 
-    public function TaskCompleted(){
+    public function TaskCompleted()
+    {
         $oldPosition = $this->task->position;
 
         $this->task->update(['is_completed' => $this->completed]);

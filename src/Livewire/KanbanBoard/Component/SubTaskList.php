@@ -2,48 +2,54 @@
 
 namespace Lastdino\KanbanBoard\Livewire\KanbanBoard\Component;
 
-use Illuminate\Database\Eloquent\Model;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Board;
-use Livewire\Attributes\On;
+use Lastdino\KanbanBoard\Models\KanbanBoardTask as Task;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
-use Lastdino\KanbanBoard\Models\KanbanBoardTask as Task;
 
 class SubTaskList extends Component
 {
     public $item;
+
     public $title;
+
     public $completed;
+
     public $project;
 
     public $search;
 
-    public function mount(){
-        $this->project=$this->item->column->board;
+    public function mount()
+    {
+        $this->project = $this->item->column->board;
     }
 
     #[Computed]
-    public function MainTask(){
+    public function MainTask()
+    {
         $board = $this->item->column->board;
+
         return Task::query()
             ->whereHas('column', function ($query) use ($board) {
                 $query->where('board_id', $board->id);
             })
             ->with(['column', 'badges']) // 必要に応じてリレーションを追加
             ->orderBy('position')
-            ->where('parent_id',null)
-            ->tap(fn ($query) => $this->search ? $query->where('title','LIKE', '%' . $this->search . '%') : $query)
+            ->where('parent_id', null)
+            ->tap(fn ($query) => $this->search ? $query->where('title', 'LIKE', '%'.$this->search.'%') : $query)
             ->get();
     }
 
-    public function updated($property){
+    public function updated($property)
+    {
         match ($property) {
             'completed' => $this->TaskCompleted(),
             default => null,
         };
     }
 
-    public function TaskCompleted(){
+    public function TaskCompleted()
+    {
         $oldPosition = $this->item->position;
 
         $this->item->update(['is_completed' => $this->completed]);

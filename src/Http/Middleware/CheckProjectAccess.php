@@ -11,39 +11,39 @@ class CheckProjectAccess
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
     {
         // 認証チェック
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login');
         }
 
         // boardIdパラメータを取得（URLパラメータまたはクエリパラメータ）
         $boardId = $request->route('boardId') ?? $request->get('boardId');
 
-        if (!$boardId) {
+        if (! $boardId) {
             abort(400, 'プロジェクトIDが指定されていません。');
         }
 
         // プロジェクトの存在確認
         $project = KanbanBoardProject::find($boardId);
-        if (!$project) {
+        if (! $project) {
             abort(404, 'プロジェクトが見つかりません。');
         }
 
-        if($project->is_private){
+        if ($project->is_private) {
             // 現在のユーザーがプロジェクトのメンバーかチェック
             $currentUserId = auth()->id();
             $isProjectMember = $project->users()->where('user_id', $currentUserId)->exists();
 
-            if (!$isProjectMember) {
+            if (! $isProjectMember) {
                 abort(403, 'このプロジェクトにアクセスする権限がありません。');
             }
         }
+
         return $next($request);
     }
 }

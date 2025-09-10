@@ -5,7 +5,7 @@ return [
     /**
      * The model associated with login and authentication
      */
-    'users_model' => "\\App\\Models\\User",
+    'users_model' => '\\App\\Models\\User',
 
     /*
     |--------------------------------------------------------------------------
@@ -18,7 +18,7 @@ return [
     */
     'routes' => [
         'prefix' => 'kanban',
-        'middleware' => ['web','auth:web'],
+        'middleware' => ['web', 'auth:web'],
         'guards' => ['web'],
     ],
 
@@ -41,7 +41,6 @@ return [
         ],
     ],
 
-
     /**
      * User Display Configuration
      * - display_name_column: Column name used for user display name
@@ -49,7 +48,7 @@ return [
      */
     'user' => [
         'display_name_column' => 'Full_name',  // Default display name column
-        'fallback_columns' => ['full_name', 'display_name','name', ], // Fallback columns array
+        'fallback_columns' => ['full_name', 'display_name', 'name'], // Fallback columns array
     ],
 
     'name' => 'Kanban Board',

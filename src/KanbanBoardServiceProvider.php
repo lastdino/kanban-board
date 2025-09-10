@@ -2,21 +2,19 @@
 
 namespace Lastdino\KanbanBoard;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
+use Illuminate\Support\ServiceProvider;
 use Lastdino\KanbanBoard\Console\Commands\SendTaskReminders;
-use Lastdino\KanbanBoard\Http\Middleware\CheckProjectAccess;
 use Lastdino\KanbanBoard\Helpers\UserDisplayHelper;
+use Lastdino\KanbanBoard\Http\Middleware\CheckProjectAccess;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Board;
-use Lastdino\KanbanBoard\Livewire\KanbanBoard\ProjectList;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\CheckListItem;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\SubTaskList;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskCard;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskComments;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskFile;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskModal;
-use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\CheckListItem;
-
-
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\ProjectList;
 use Livewire\Livewire;
 
 class KanbanBoardServiceProvider extends ServiceProvider
@@ -25,22 +23,20 @@ class KanbanBoardServiceProvider extends ServiceProvider
     {
 
         $this->publishes([
-            __DIR__ . '/../config/kanban-board.php' => config_path('kanban-board.php'),
-        ],'kanban-config');
-
-
+            __DIR__.'/../config/kanban-board.php' => config_path('kanban-board.php'),
+        ], 'kanban-config');
 
         $this->publishes([
             __DIR__.'/../resources/views' => resource_path('views/vendor/kanban-board'),
         ], 'kanban-views');
 
         $this->publishes([
-            __DIR__ . '/../database/migrations' => database_path('migrations'),
+            __DIR__.'/../database/migrations' => database_path('migrations'),
         ], 'kanban-migrations');
 
         $this->publishes([
-            __DIR__ . '/../lang' => lang_path('vendor/kanban-board'),
-        ],'kanban-lang');
+            __DIR__.'/../lang' => lang_path('vendor/kanban-board'),
+        ], 'kanban-lang');
 
         $this->loadLivewireComponents();
 
@@ -63,12 +59,12 @@ class KanbanBoardServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/kanban-board.php',
+            __DIR__.'/../config/kanban-board.php',
             'kanban-board'
         );
 
         $this->app->singleton('kanban-board.user-display', function () {
-            return new UserDisplayHelper();
+            return new UserDisplayHelper;
         });
 
     }

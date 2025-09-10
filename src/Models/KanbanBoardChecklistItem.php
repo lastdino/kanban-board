@@ -1,4 +1,5 @@
 <?php
+
 namespace Lastdino\KanbanBoard\Models;
 
 use Illuminate\Database\Eloquent\Model;

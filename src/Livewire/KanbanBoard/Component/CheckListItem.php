@@ -2,33 +2,38 @@
 
 namespace Lastdino\KanbanBoard\Livewire\KanbanBoard\Component;
 
-use Illuminate\Database\Eloquent\Model;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Board;
-use Livewire\Attributes\On;
 use Livewire\Component;
-use Lastdino\KanbanBoard\Models\KanbanBoardTask as Task;
 
 class CheckListItem extends Component
 {
     public $item;
+
     public $editing = false;
-    public $not_edit=false;
+
+    public $not_edit = false;
+
     public $content;
+
     public $completed;
+
     public $project;
 
-    public function mount(){
-        $this->project=$this->item->task->column->board;
+    public function mount()
+    {
+        $this->project = $this->item->task->column->board;
     }
 
-    public function updated($property){
+    public function updated($property)
+    {
         match ($property) {
             'completed' => $this->CheckListCompleted(),
             default => null,
         };
     }
 
-    public function CheckListCompleted(){
+    public function CheckListCompleted()
+    {
         $this->item->update(['is_completed' => $this->completed]);
         $this->dispatch('refresh-columns')->to(Board::class);
     }
@@ -42,7 +47,7 @@ class CheckListItem extends Component
     {
         $this->editing = false;
 
-        $this->item->update(['content'=>$this->content]);
+        $this->item->update(['content' => $this->content]);
     }
 
     public function render()

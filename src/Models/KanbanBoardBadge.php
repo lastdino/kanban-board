@@ -1,4 +1,5 @@
 <?php
+
 namespace Lastdino\KanbanBoard\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -12,9 +13,8 @@ class KanbanBoardBadge extends Model
         'color',
     ];
 
-
     public function tasks(): BelongsToMany
     {
-        return $this->belongsToMany(KanbanBoardTask::class,'kanban_board_badge_task','badge_id','task_id');
+        return $this->belongsToMany(KanbanBoardTask::class, 'kanban_board_badge_task', 'badge_id', 'task_id');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Lastdino\KanbanBoard\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -67,13 +68,14 @@ class KanbanBoardTask extends Model implements HasMedia
 
     public function badges(): BelongsToMany
     {
-        return $this->belongsToMany(KanbanBoardBadge::class,'kanban_board_badge_task','task_id','badge_id');
+        return $this->belongsToMany(KanbanBoardBadge::class, 'kanban_board_badge_task', 'task_id', 'badge_id');
     }
 
     public function assignedUser(): BelongsTo
     {
         return $this->belongsTo(config('kanban-board.users_model'), 'assigned_user_id');
     }
+
     public function createdUser(): BelongsTo
     {
         return $this->belongsTo(config('kanban-board.users_model'), 'created_user_id');
@@ -157,7 +159,7 @@ class KanbanBoardTask extends Model implements HasMedia
 
     public function isDueSoon(): bool
     {
-        if (!$this->due_date) {
+        if (! $this->due_date) {
             return false;
         }
 
@@ -166,7 +168,7 @@ class KanbanBoardTask extends Model implements HasMedia
 
     public function isOverdue(): bool
     {
-        if (!$this->due_date) {
+        if (! $this->due_date) {
             return false;
         }
 
@@ -181,6 +183,7 @@ class KanbanBoardTask extends Model implements HasMedia
             ->whereNotNull('reminder_at')
             ->get();
     }
+
     /**
      * リマインダーを送信済みとしてマーク
      */
@@ -188,6 +191,4 @@ class KanbanBoardTask extends Model implements HasMedia
     {
         $this->update(['reminder_sent' => true]);
     }
-
-
 }

@@ -265,7 +265,14 @@
                             @if($sortDirection === 'asc')
                                 @foreach($column->tasks->where('is_completed', false)->sortBy($sortBy) as $card)
                                     <tr x-show="showTasks" wire:click="$dispatch('show-modal', { id: {{ $card->id }} })">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->title }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <div>
+                                                @if($card->isSubtask())
+                                                    <div class="text-xs">#{{$card->parent->id}} {{$card->parent->title}}</div>
+                                                @endif
+                                                <div>@if($card->isSubtask())<span>└─ </span> @endif#{{$card->id}} {{ $card->title }}</div>
+                                            </div>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date ? $card->start_date->format(config('kanban-board.datetime.formats.date')) : '' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date ? $card->due_date->format(config('kanban-board.datetime.formats.date'))  : ''}}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -285,7 +292,14 @@
                             @else
                                 @foreach($column->tasks->where('is_completed', false)->sortByDesc($sortBy) as $card)
                                     <tr x-show="showTasks" wire:click="$dispatch('show-modal', { id: {{ $card->id }} })">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->title }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <div>
+                                                @if($card->isSubtask())
+                                                    <div class="text-xs">#{{$card->parent->id}} {{$card->parent->title}}</div>
+                                                @endif
+                                                <div>@if($card->isSubtask())<span>└─ </span> @endif#{{$card->id}} {{ $card->title }}</div>
+                                            </div>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date ? $card->start_date->format(config('kanban-board.datetime.formats.date')) : '' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date ? $card->due_date->format(config('kanban-board.datetime.formats.date'))  : ''}}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -320,7 +334,14 @@
                             {{-- 完了タスク一覧 --}}
                             @foreach($column->tasks->where('is_completed', true) as $card)
                                 <tr x-show="showTasks && showCompleted" wire:click="$dispatch('show-modal', { id: {{ $card->id }} })">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->title }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div>
+                                            @if($card->isSubtask())
+                                                <div class="text-xs">#{{$card->parent->id}} {{$card->parent->title}}</div>
+                                            @endif
+                                            <div>@if($card->isSubtask())<span>└─ </span> @endif#{{$card->id}} {{ $card->title }}</div>
+                                        </div>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->start_date ? $card->start_date->format(config('kanban-board.datetime.formats.date')) : '' }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->due_date ? $card->due_date->format(config('kanban-board.datetime.formats.date'))  : ''}}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $card->updated_at ? $card->updated_at->format(config('kanban-board.datetime.formats.date'))  : ''}}</td>

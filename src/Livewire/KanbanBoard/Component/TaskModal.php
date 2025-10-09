@@ -162,7 +162,7 @@ class TaskModal extends Component
             $this->due_date = $this->task->due_date?->format('Y-m-d');
             $this->reminder_at = $this->task->reminder_at?->format('Y-m-d');
             $this->label_color = $this->task->label_color;
-            $this->assigned_user = $this->task->assignedUser;
+            $this->assigned_user = $this->task->assignedUser->id;
             $this->completed = $this->task->is_completed;
         }
         Flux::modal('edit-task')->show();
@@ -185,7 +185,7 @@ class TaskModal extends Component
                 'start_date' => $this->task->update(['start_date' => $this->start_date]),
                 'due_date' => $this->task->update(['due_date' => $this->due_date]),
                 'reminder_at' => $this->task->update(['reminder_at' => $this->reminder_at]),
-                'assigned_user' => $this->task->update(['assigned_user_id' => $this->assigned_user->id]),
+                'assigned_user' => $this->task->update(['assigned_user_id' => $this->assigned_user]),
                 'completed' => $this->TaskCompleted(),
                 default => null,
             };

@@ -96,4 +96,12 @@ return [
     'project_id_required' => 'Project ID is required.',
     'project_not_found' => 'Project not found.',
     'access_denied' => 'You do not have permission to access this project.',
+    'wiki_template' => 'Wiki Template',
+    'templates' => 'Templates',
+    'select_template' => 'Select Template',
+    'save_as_template' => 'Save as Template',
+    'template_name' => 'Template Name',
+    'template_saved' => 'Template saved.',
+    'manage_templates' => 'Manage Templates',
+    'global_template' => 'Global Template',
 ];

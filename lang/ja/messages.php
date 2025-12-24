@@ -96,4 +96,12 @@ return [
     'project_id_required' => 'プロジェクトIDが指定されていません。',
     'project_not_found' => 'プロジェクトが見つかりません。',
     'access_denied' => 'このプロジェクトにアクセスする権限がありません。',
+    'wiki_template' => 'Wikiテンプレート',
+    'templates' => 'テンプレート',
+    'select_template' => 'テンプレートを選択',
+    'save_as_template' => 'テンプレートとして保存',
+    'template_name' => 'テンプレート名',
+    'template_saved' => 'テンプレートを保存しました。',
+    'manage_templates' => 'テンプレート管理',
+    'global_template' => '共通テンプレート',
 ];

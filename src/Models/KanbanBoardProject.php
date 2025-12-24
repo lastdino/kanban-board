@@ -49,4 +49,9 @@ class KanbanBoardProject extends Model
     {
         return $this->hasMany(KanbanBoardWikiPage::class, 'project_id')->orderBy('position');
     }
+
+    public function wikiTemplates(): HasMany
+    {
+        return $this->hasMany(KanbanBoardWikiTemplate::class, 'project_id')->orderBy('name');
+    }
 }

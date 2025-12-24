@@ -32,24 +32,97 @@
                     </div>
                 @endforeach
             </nav>
+
+            @if($templates->count() > 0)
+                <flux:separator class="my-4" />
+                <div class="flex items-center justify-between">
+                    <flux:heading size="sm">{{ __('kanban-board::messages.templates') }}</flux:heading>
+                </div>
+                <nav class="flex flex-col gap-1 overflow-y-auto">
+                    @foreach($templates as $template)
+                        <div class="group flex items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-900">
+                            <span class="flex-1 truncate text-zinc-600 dark:text-zinc-400 flex items-center gap-2">
+                                {{ $template->name }}
+                                @if(is_null($template->project_id))
+                                    <flux:badge size="sm" variant="subtle" color="zinc">{{ __('kanban-board::messages.global_template') }}</flux:badge>
+                                @endif
+                            </span>
+
+                            <flux:dropdown>
+                                <flux:button variant="ghost" size="xs" icon="ellipsis-horizontal" class="opacity-0 group-hover:opacity-100" />
+                                <flux:menu>
+                                    <flux:menu.item wire:click="applyTemplate({{ $template->id }})" icon="document-duplicate">{{ __('kanban-board::messages.select_template') }}</flux:menu.item>
+                                    <flux:menu.item wire:click="deleteTemplate({{ $template->id }})" variant="danger" icon="trash">{{ __('kanban-board::messages.delete') }}</flux:menu.item>
+                                </flux:menu>
+                            </flux:dropdown>
+                        </div>
+                    @endforeach
+                </nav>
+            @endif
         </div>
 
         <!-- Main Content: Viewer/Editor -->
         <div class="flex-1 overflow-y-auto">
             @if($isEditing)
                 <div class="flex flex-col gap-4 max-w-4xl">
-                    <flux:input wire:model="title" label="{{ __('kanban-board::messages.title') }}" placeholder="{{ __('kanban-board::messages.title') }}" />
+                    <div class="flex items-end gap-4">
+                        <div class="flex-1">
+                            <flux:input wire:model="title" label="{{ __('kanban-board::messages.title') }}" placeholder="{{ __('kanban-board::messages.title') }}" />
+                        </div>
+
+                        @if($templates->count() > 0)
+                            <flux:dropdown>
+                                <flux:button icon="document-duplicate" variant="subtle" size="sm">{{ __('kanban-board::messages.templates') }}</flux:button>
+                                <flux:menu>
+                                    @foreach($templates as $template)
+                                        <flux:menu.item wire:click="applyTemplate({{ $template->id }})">
+                                            {{ $template->name }}
+                                            @if(is_null($template->project_id))
+                                                ({{ __('kanban-board::messages.global_template') }})
+                                            @endif
+                                        </flux:menu.item>
+                                    @endforeach
+                                </flux:menu>
+                            </flux:dropdown>
+                        @endif
+                    </div>
 
                     <flux:field>
                         <flux:label>{{ __('kanban-board::messages.content') }} ({{ __('kanban-board::messages.markdown_supported') }})</flux:label>
                         <flux:textarea wire:model="content" placeholder="{{ __('kanban-board::messages.content') }}" rows="15" />
                     </flux:field>
 
-                    <div class="flex gap-2 justify-end">
-                        <flux:button wire:click="cancel" variant="ghost">{{ __('kanban-board::messages.cancel') }}</flux:button>
-                        <flux:button wire:click="save" variant="primary">{{ __('kanban-board::messages.save_page') }}</flux:button>
+                    <div class="flex gap-2 justify-between">
+                        <div>
+                            <flux:modal.trigger name="save-template">
+                                <flux:button variant="subtle" icon="bookmark">{{ __('kanban-board::messages.save_as_template') }}</flux:button>
+                            </flux:modal.trigger>
+                        </div>
+                        <div class="flex gap-2">
+                            <flux:button wire:click="cancel" variant="ghost">{{ __('kanban-board::messages.cancel') }}</flux:button>
+                            <flux:button wire:click="save" variant="primary">{{ __('kanban-board::messages.save_page') }}</flux:button>
+                        </div>
                     </div>
                 </div>
+
+                <flux:modal name="save-template" class="md:w-96">
+                    <div class="space-y-6">
+                        <div>
+                            <flux:heading size="lg">{{ __('kanban-board::messages.save_as_template') }}</flux:heading>
+                        </div>
+
+                        <flux:input wire:model="templateName" label="{{ __('kanban-board::messages.template_name') }}" />
+
+                        <flux:checkbox wire:model="isGlobalTemplate" label="{{ __('kanban-board::messages.global_template') }}" />
+
+                        <div class="flex gap-2 justify-end">
+                            <flux:modal.close>
+                                <flux:button variant="ghost">{{ __('kanban-board::messages.cancel') }}</flux:button>
+                            </flux:modal.close>
+                            <flux:button wire:click="saveAsTemplate" variant="primary">{{ __('kanban-board::messages.save') }}</flux:button>
+                        </div>
+                    </div>
+                </flux:modal>
             @elseif($selectedPageId)
                 <div class="max-w-5xl">
                     <div class="flex justify-between items-center mb-4 pb-2 border-b">

@@ -1,11 +1,11 @@
 <div class="flex items-center p-2 gap-2">
     @if($item->is_completed)
-        <flux:tooltip content="クリックして未完了">
+        <flux:tooltip content="{{ __('kanban-board::messages.mark_incomplete') }}">
             <flux:checkbox wire:model.live.debounce="completed"
                            :disabled="!$this->project->users->where('id', auth()->id())->first()"/>
         </flux:tooltip>
     @else
-        <flux:tooltip content="クリックして完了">
+        <flux:tooltip content="{{ __('kanban-board::messages.mark_completed') }}">
             <flux:checkbox wire:model.live.debounce="completed"
                            :disabled="!$this->project->users->where('id', auth()->id())->first()"/>
         </flux:tooltip>
@@ -31,7 +31,7 @@
                     @endif
 
                 @else
-                    <span class="text-gray-400 dark:text-gray-500 italic">クリックして編集</span>
+                    <span class="text-gray-400 dark:text-gray-500 italic">{{ __('kanban-board::messages.click_to_edit') }}</span>
                 @endif
             </div>
             <flux:button size="xs" icon="trash" variant="ghost" inset class="opacity-0 group-hover/item:opacity-100" wire:click="$parent.DeleteCheckItem({{ $item->id }})" :disabled="!$this->project->users->where('id', auth()->id())->first()"/>

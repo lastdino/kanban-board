@@ -14,7 +14,8 @@ Laravelベースのカンバンボードパッケージです。Livewire 3とFlu
 - Livewire Flux 2.0以上
 - Spatie Laravel Media Library 11.13以上
 - AlpineJS 3.0以上
-- @alpinejs/sort　3.0以上
+- @alpinejs/sort 3.0以上
+- @tailwindcss/typography 0.5以上
 
 ## インストール
 
@@ -37,13 +38,33 @@ php artisan vendor:publish --provider="Lastdino\KanbanBoard\KanbanBoardServicePr
 php artisan migrate
 ```
 
-### 4. ビューの公開（オプション）
+### 4. アセットとビューの設定
+
+このパッケージのスタイルを適用するために、以下のいずれかの操作を行ってください。
+
+#### A. ビューを公開する場合
+ビューを公開すると、パッケージのスタイルが自動的にプロジェクトのビルドに含まれます。
 
 ```bash
 php artisan vendor:publish --provider="Lastdino\KanbanBoard\KanbanBoardServiceProvider" --tag="kanban-views"
 ```
 
-### 5. 言語ファイルの公開（オプション）
+#### B. CSSを直接インポートする場合
+ビューを公開せずにスタイルのみを適用したい場合は、`resources/css/app.css` に以下の行を追加してください。
+
+```css
+@import "../../packages/lastdino/kanban-board/dist/kanban-board.css";
+```
+
+### 5. アセットのビルド
+
+設定後、アセットをビルドしてください。
+
+```bash
+npm run build
+```
+
+### 6. 言語ファイルの公開（オプション）
 
 ```bash
 php artisan vendor:publish --provider="Lastdino\KanbanBoard\KanbanBoardServiceProvider" --tag="kanban-lang"
@@ -80,6 +101,8 @@ php artisan vendor:publish --provider="Spatie\MediaLibrary\MediaLibraryServicePr
 - **サブタスク機能**: タスクの階層管理
 - **チェックリスト**: タスク内のチェックリスト機能
 - **ファイル添付**: Spatie Media Libraryを使用したファイル管理
+- **ファイル一覧**: プロジェクト内の全添付ファイルを一覧表示
+- **Wiki機能**: プロジェクトごとのドキュメント管理機能
 
 ## 設定
 
@@ -93,7 +116,7 @@ return [
     // ルート設定
     'routes' => [
         'prefix' => 'kanban',
-        'middleware' => ['web'],
+        'middleware' => ['web', 'auth:web'],
         'guards' => ['web'],
     ],
 
@@ -122,7 +145,10 @@ return [
 
 デフォルトで使用可能な主要なルート：
 
-- `/kanban/project_list` - プロジェクト一覧の表示
+- `/kanban/project_list` - プロジェクト一覧
+- `/kanban/board` - カンバンボード（`project_id` パラメータが必要）
+- `/kanban/wiki` - プロジェクトWiki（`project_id` パラメータが必要）
+- `/kanban/project/files` - プロジェクト添付ファイル一覧（`project_id` パラメータが必要）
 
 ### タスクリマインダーの送信
 

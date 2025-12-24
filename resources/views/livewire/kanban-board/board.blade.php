@@ -16,8 +16,8 @@
         </flux:breadcrumbs>
         <div class="flex gap-4">
             <flux:radio.group variant="segmented">
-                <flux:radio label="かんばん" x-on:click="selectedTab = 'kanban'" checked/>
-                <flux:radio label="リスト" x-on:click="selectedTab = 'list'"/>
+                <flux:radio label="{{ __('kanban-board::messages.kanban') }}" x-on:click="selectedTab = 'kanban'" checked/>
+                <flux:radio label="{{ __('kanban-board::messages.list') }}" x-on:click="selectedTab = 'list'"/>
             </flux:radio.group>
 
             <flux:separator vertical class="my-2" />
@@ -34,18 +34,25 @@
 
             <flux:modal.trigger name="invite">
                 @if($this->project->admin->id === auth()->id())
-                    <flux:button variant="filled" size="sm">招待</flux:button>
+                    <flux:button variant="filled" size="sm">{{ __('kanban-board::messages.invite') }}</flux:button>
                 @endif
             </flux:modal.trigger>
+
+            <flux:button href="{{ route(config('kanban-board.routes.prefix').'.wiki', ['boardId' => $project->id]) }}" variant="subtle" size="sm">
+                {{ __('kanban-board::messages.wiki') }}
+            </flux:button>
+            <flux:button href="{{ route(config('kanban-board.routes.prefix').'.project.files', ['boardId' => $project->id]) }}" variant="subtle" size="sm">
+                {{ __('kanban-board::messages.file_list') }}
+            </flux:button>
             <flux:modal name="invite" class="md:w-96">
                 <div class="space-y-6">
                     <div>
-                        <flux:heading size="lg">ユーザーを招待</flux:heading>
-                        <flux:text class="mt-2">追加するユーザーを選択して招待してください。</flux:text>
+                        <flux:heading size="lg">{{ __('kanban-board::messages.invite_user') }}</flux:heading>
+                        <flux:text class="mt-2">{{ __('kanban-board::messages.invite_user_description') }}</flux:text>
                     </div>
                     <div class="flex flex-col gap-2">
                         <select wire:model="selectedUser" class="rounded-lg border border-zinc-200 bg-white dark:border-white/10 dark:bg-zinc-800">
-                            <option value="">招待する人を選択</option>
+                            <option value="">{{ __('kanban-board::messages.select_user') }}</option>
                             @foreach ($NotInvitedUsers as $user)
                                 <option value="{{$user->id}}">{{$user->name}}</option>
                             @endforeach
@@ -53,20 +60,20 @@
                     </div>
                     <div class="flex">
                         <flux:spacer />
-                        <flux:button type="submit" variant="primary" wire:click="invite">招待</flux:button>
+                        <flux:button type="submit" variant="primary" wire:click="invite">{{ __('kanban-board::messages.invite') }}</flux:button>
                     </div>
                 </div>
             </flux:modal>
             <flux:modal name="users" class="md:w-96">
                 <div class="space-y-6">
                     <div>
-                        <flux:heading size="lg">ユーザーリスト</flux:heading>
+                        <flux:heading size="lg">{{ __('kanban-board::messages.user_list') }}</flux:heading>
                     </div>
                     <div class="flex flex-col gap-2">
                         @foreach($users as $user)
                             <div class="flex ">
                                 <flux:avatar size="sm" tooltip name="{{ \Lastdino\KanbanBoard\Helpers\UserDisplayHelper::getDisplayName($user) }}" src="{{$user->getUserAvatar()}}" />
-                                <flux:tooltip content="削除">
+                                <flux:tooltip content="{{ __('kanban-board::messages.delete') }}">
                                     <flux:button icon="x-mark" variant="subtle" inset wire:click="removeUser({{$user->id}})"/>
                                 </flux:tooltip>
                             </div>
@@ -96,13 +103,13 @@
                                         </div>
                                         <div>
                                             @if($this->project->users->where('id', auth()->id())->first())
-                                                <flux:button variant="subtle" icon="plus" size="sm" tooltip="タスクを追加"
+                                                <flux:button variant="subtle" icon="plus" size="sm" tooltip="{{ __('kanban-board::messages.add_task') }}"
                                                              wire:click="dispatchTo('kanban-board.component.task-modal', 'show-new-modal',{columnId: {{ $column->id }}})"/>
                                                 <flux:dropdown>
                                                     <flux:button icon="ellipsis-horizontal" size="sm" variant="subtle"></flux:button>
                                                     <flux:menu>
                                                         <flux:field>
-                                                            <flux:label>ラベル</flux:label>
+                                                            <flux:label>{{ __('kanban-board::messages.edit_column_title') }}</flux:label>
                                                             <div class="flex gap-2">
                                                                 <flux:button variant="primary" size="xs" color="violet" wire:click="setLabelColor('violet',{{$column}})" icon="check" icon:class="{{$column->color == 'violet' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
                                                                 <flux:button variant="primary" size="xs" color="blue" wire:click="setLabelColor('blue',{{$column}})" icon="check"
@@ -123,8 +130,7 @@
                                                                              icon:class="{{$column->color == 'zinc' ? 'opacity-100' : 'opacity-0'}}"></flux:button>
                                                             </div>
                                                         </flux:field>
-                                                        <flux:menu.separator />
-                                                        <flux:menu.item icon="trash" variant="danger" wire:click="removeColumn({{$column->id}})">削除</flux:menu.item>
+                                                        <flux:menu.item icon="trash" variant="danger" wire:click="removeColumn({{$column->id}})">{{ __('kanban-board::messages.delete') }}</flux:menu.item>
                                                     </flux:menu>
                                                 </flux:dropdown>
                                             @endif

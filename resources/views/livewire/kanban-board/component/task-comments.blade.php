@@ -8,7 +8,7 @@
                         {{ $comment->user->name }}
                         <flux:text class="text-xs">{{ $comment->created_at->diffForHumans() }}</flux:text>
                     </flux:callout.heading>
-                    <flux:tooltip content="返信">
+                    <flux:tooltip content="{{ __('kanban-board::messages.reply') }}">
                         <flux:button size="xs"  icon="arrow-uturn-left" variant="ghost" inset wire:click="replyComment({{ $comment->id }})"/>
                     </flux:tooltip>
                 </div>
@@ -42,16 +42,16 @@
                 @endphp
             <div class="flex">
                 <flux:icon.arrow-uturn-left class="size-3" />
-                <flux:text>返信:{{$reply->content}}</flux:text>
+                <flux:text>{{ __('kanban-board::messages.reply') }}:{{$reply->content}}</flux:text>
             </div>
             @endif
             <flux:textarea
-                placeholder="コメントを入力..."
+                placeholder="{{ __('kanban-board::messages.comment_placeholder') }}"
                 wire:model="commentContent"
             />
             <div class="flex justify-end mt-2">
                 <flux:button variant="primary" wire:click="addComment">
-                    コメントを追加
+                    {{ __('kanban-board::messages.add_comment') }}
                 </flux:button>
             </div>
         </div>

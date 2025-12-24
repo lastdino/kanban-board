@@ -11,8 +11,8 @@
                     <div class="border border-dashed border-gray-400 h-32 flex flex-col items-center justify-center"
                          x-on:click="$refs.fileInput.click()"
                     >
-                        <flux:text>ドラッグ＆ドロップしてファイルをアップロード</flux:text>
-                        <flux:text>クリックでファイル選択</flux:text>
+                        <flux:text>{{ __('kanban-board::messages.upload_description') }}</flux:text>
+                        <flux:text>{{ __('kanban-board::messages.click_to_select_file') }}</flux:text>
 
                     </div>
                     <input type="file"  multiple x-on:change="handleFileInput($event)" x-ref="fileInput" style="display:none">
@@ -38,16 +38,16 @@
                                 <flux:button icon="ellipsis-horizontal" size="sm" variant="subtle" :disabled="!$this->project->users->where('id', auth()->id())->first()"></flux:button>
                                 <flux:menu>
                                     <flux:menu.item icon="arrow-down-tray" href="{{$this->temporaryURL($file->id)}}">
-                                        ダウンロード
+                                        {{ __('kanban-board::messages.download') }}
                                     </flux:menu.item>
                                     <flux:menu.separator />
-                                    <flux:menu.item variant="danger" icon="trash" wire:click="delete({{$file->id}})" wire:confirm="ファイルを削除してもよろしいですか">削除</flux:menu.item>
+                                    <flux:menu.item variant="danger" icon="trash" wire:click="delete({{$file->id}})" wire:confirm="{{ __('kanban-board::messages.delete_file_confirm') }}">{{ __('kanban-board::messages.delete') }}</flux:menu.item>
                                 </flux:menu>
                             </flux:dropdown>
                         </div>
                     </flux:callout.heading>
                     <flux:callout.text>
-                        アップロード日：{{$file->created_at}}
+                        {{ __('kanban-board::messages.uploaded_at') }}{{$file->created_at}}
                     </flux:callout.text>
                 </flux:callout>
             @endforeach

@@ -25,13 +25,13 @@ class CheckProjectAccess
         $boardId = $request->route('boardId') ?? $request->get('boardId');
 
         if (! $boardId) {
-            abort(400, 'プロジェクトIDが指定されていません。');
+            abort(400, __('kanban-board::messages.project_id_required'));
         }
 
         // プロジェクトの存在確認
         $project = KanbanBoardProject::find($boardId);
         if (! $project) {
-            abort(404, 'プロジェクトが見つかりません。');
+            abort(404, __('kanban-board::messages.project_not_found'));
         }
 
         if ($project->is_private) {
@@ -40,7 +40,7 @@ class CheckProjectAccess
             $isProjectMember = $project->users()->where('user_id', $currentUserId)->exists();
 
             if (! $isProjectMember) {
-                abort(403, 'このプロジェクトにアクセスする権限がありません。');
+                abort(403, __('kanban-board::messages.access_denied'));
             }
         }
 

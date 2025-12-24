@@ -5,7 +5,7 @@
         @if($task->isSubtask())
             <flux:heading>
                 <flux:icon.rectangle-stack class="size-3 inline"/>
-                #{{$task->parent->id}} {{$task->parent->title}}
+                 {{$task->parent->title}}
             </flux:heading>
         @endif
         <div  class="{{ $task->isSubtask() ? 'space-y-2 ml-4 rounded-lg shadow-xs border border-zinc-200 dark:border-white/10 dark:bg-zinc-800 p-3' : 'space-y-2' }}">
@@ -19,17 +19,17 @@
                 @if($this->project->users->where('id', auth()->id())->first())
                     <div x-on:click.stop>
                         @if($task->is_completed)
-                            <flux:tooltip content="クリックして未完了">
+                            <flux:tooltip content="{{ __('kanban-board::messages.mark_incomplete') }}">
                                 <flux:checkbox wire:model.live.debounce="completed" />
                             </flux:tooltip>
                         @else
-                            <flux:tooltip content="クリックして完了">
+                            <flux:tooltip content="{{ __('kanban-board::messages.mark_completed') }}">
                                 <flux:checkbox wire:model.live.debounce="completed" />
                             </flux:tooltip>
                         @endif
                     </div>
                 @endif
-                <flux:heading>#{{$task['id']}}{{ $task['title'] }}</flux:heading>
+                <flux:heading>{{ $task['title'] }}</flux:heading>
             </div>
             @if($task['label_color'])
                 <x-kanban-board::label_color class="h-1 rounded-full mt-1" color="{{ $task['label_color'] }}"/>

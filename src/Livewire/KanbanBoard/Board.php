@@ -56,10 +56,11 @@ class Board extends Component
         $this->admin = $this->project->admin;
     }
 
-    #[Title('かんばんボード')]
+    #[Title('Kanban Board')]
     public function render()
     {
-        return view('kanban-board::livewire.kanban-board.board');
+        return view('kanban-board::livewire.kanban-board.board')
+            ->title(__('kanban-board::messages.kanban'));
     }
 
     #[Computed]
@@ -84,7 +85,7 @@ class Board extends Component
     {
         Flux::modal('invite')->close();
         $this->project->users()->attach($this->selectedUser);
-        Flux::toast(heading: '招待', text: '招待しました。', variant: 'success');
+        Flux::toast(heading: __('kanban-board::messages.invite'), text: __('kanban-board::messages.notify_saved'), variant: 'success');
 
         $this->NotInvitedUsers = $this->project->NotInvitedUsers();
         $this->users = $this->project->users;

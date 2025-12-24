@@ -56,10 +56,11 @@ class ProjectList extends Component
             ->paginate($perPage);
     }
 
-    #[Title('プロジェクト')]
+    #[Title('Projects')]
     public function render()
     {
-        return view('kanban-board::livewire.kanban-board.project-list');
+        return view('kanban-board::livewire.kanban-board.project-list')
+            ->title(__('kanban-board::messages.project_list'));
     }
 
     public function resetFilters()

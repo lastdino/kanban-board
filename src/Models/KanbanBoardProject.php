@@ -44,4 +44,9 @@ class KanbanBoardProject extends Model
     {
         return config('kanban-board.users_model')::whereNotIn('id', $this->users->pluck('id'))->get();
     }
+
+    public function wikiPages(): HasMany
+    {
+        return $this->hasMany(KanbanBoardWikiPage::class, 'project_id')->orderBy('position');
+    }
 }

@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Board;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\FileList;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\ProjectList;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\Wiki;
 
 Route::middleware(config('kanban-board.routes.middleware'))
     ->prefix(config('kanban-board.routes.prefix'))
@@ -10,6 +12,8 @@ Route::middleware(config('kanban-board.routes.middleware'))
     ->group(function () {
         Route::get('/project_list', ProjectList::class)->name('project_list');
         Route::get('/board', Board::class)->middleware('kanban.project.access')->name('board');
+        Route::get('/wiki', Wiki::class)->middleware('kanban.project.access')->name('wiki');
+        Route::get('/project/files', FileList::class)->middleware('kanban.project.access')->name('project.files');
         Route::get('/download/{media}', function (Request $request, $media) {
             $mediaItem = \Spatie\MediaLibrary\MediaCollections\Models\Media::findOrFail($media);
             $path = $mediaItem->getPath(); // 物理パス

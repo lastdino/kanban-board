@@ -14,7 +14,9 @@ use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskCard;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskComments;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskFile;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\Component\TaskModal;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\FileList;
 use Lastdino\KanbanBoard\Livewire\KanbanBoard\ProjectList;
+use Lastdino\KanbanBoard\Livewire\KanbanBoard\Wiki;
 use Livewire\Livewire;
 
 class KanbanBoardServiceProvider extends ServiceProvider
@@ -33,6 +35,8 @@ class KanbanBoardServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../database/migrations' => database_path('migrations'),
         ], 'kanban-migrations');
+
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         $this->publishes([
             __DIR__.'/../lang' => lang_path('vendor/kanban-board'),
@@ -74,6 +78,8 @@ class KanbanBoardServiceProvider extends ServiceProvider
     {
         Livewire::component('kanban-board.board', Board::class);
         Livewire::component('kanban-board.project-list', ProjectList::class);
+        Livewire::component('kanban-board.file-list', FileList::class);
+        Livewire::component('kanban-board.wiki', Wiki::class);
         Livewire::component('kanban-board.component.task-modal', TaskModal::class);
         Livewire::component('kanban-board.component.check-list-item', CheckListItem::class);
         Livewire::component('kanban-board.component.sub-task-list', SubTaskList::class);

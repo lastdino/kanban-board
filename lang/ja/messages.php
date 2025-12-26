@@ -93,6 +93,7 @@ return [
     'click_to_select_file' => 'クリックでファイル選択',
     'delete_file_confirm' => 'ファイルを削除してもよろしいですか？',
     'uploaded_at' => 'アップロード日：',
+    'file_uploaded_comment' => 'ファイルをアップロードしました：:filename',
     'project_id_required' => 'プロジェクトIDが指定されていません。',
     'project_not_found' => 'プロジェクトが見つかりません。',
     'access_denied' => 'このプロジェクトにアクセスする権限がありません。',

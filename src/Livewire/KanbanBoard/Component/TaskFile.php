@@ -50,12 +50,19 @@ class TaskFile extends Component
     #[On('uploaded-file')]
     public function Save()
     {
+        $task = Task::find($this->taskId);
         foreach ($this->up_files as $file) {
-            Task::find($this->taskId)->addMedia($file->getRealPath())
+            $task->addMedia($file->getRealPath())
                 ->usingName($file->getClientOriginalName())
                 ->toMediaCollection('task');
+
+            $task->comments()->create([
+                'content' => __('kanban-board::messages.file_uploaded_comment', ['filename' => $file->getClientOriginalName()]),
+                'user_id' => auth()->id(),
+            ]);
         }
         $this->dispatch('refresh-file')->self();
+        $this->dispatch('show-modal', id: $this->taskId);
         Flux::toast(variant: 'success', text: '登録しました。');
     }
 

@@ -93,6 +93,7 @@ return [
     'click_to_select_file' => 'Click to select file',
     'delete_file_confirm' => 'Are you sure you want to delete this file?',
     'uploaded_at' => 'Uploaded at: ',
+    'file_uploaded_comment' => 'Uploaded file: :filename',
     'project_id_required' => 'Project ID is required.',
     'project_not_found' => 'Project not found.',
     'access_denied' => 'You do not have permission to access this project.',

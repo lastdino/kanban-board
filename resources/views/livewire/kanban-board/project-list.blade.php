@@ -107,7 +107,7 @@
                             @forelse ($this->projects as $project)
                                 <tr wire:key="task-{{ $project->id }}" >
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $project->id }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" wire:click="openBoard({{ $project->id }})">{{ $project->title }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 cursor-pointer" wire:click="openBoard({{ $project->id }})">{{ $project->title }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ \Lastdino\KanbanBoard\Helpers\UserDisplayHelper::getDisplayName($project->admin) }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $project->description }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $project->created_at->format(config('kanban-board.datetime.formats.date')) }}</td>

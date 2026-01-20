@@ -8,9 +8,12 @@ use Lastdino\KanbanBoard\Models\KanbanBoardWikiPage;
 use Lastdino\KanbanBoard\Models\KanbanBoardWikiTemplate;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Wiki extends Component
 {
+    use WithFileUploads;
+
     #[Url]
     public $boardId;
 
@@ -29,6 +32,8 @@ class Wiki extends Component
     public $isGlobalTemplate = false;
 
     public $showTemplateModal = false;
+
+    public $markdownFile;
 
     protected $rules = [
         'title' => 'required|string|max:255',
@@ -151,6 +156,23 @@ class Wiki extends Component
         $template = KanbanBoardWikiTemplate::findOrFail($templateId);
         $template->delete();
         $this->dispatch('notify', __('kanban-board::messages.delete'));
+    }
+
+    public function updatedMarkdownFile()
+    {
+        $this->validate([
+            'markdownFile' => 'required|file|mimes:md,txt|max:1024',
+        ]);
+
+        $content = file_get_contents($this->markdownFile->getRealPath());
+        $this->content = $content;
+
+        // タイトルが空の場合はファイル名をセット
+        if (empty($this->title)) {
+            $this->title = pathinfo($this->markdownFile->getClientOriginalName(), PATHINFO_FILENAME);
+        }
+
+        $this->dispatch('notify', __('kanban-board::messages.markdown_imported'));
     }
 
     public function render()

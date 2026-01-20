@@ -105,4 +105,6 @@ return [
     'template_saved' => 'テンプレートを保存しました。',
     'manage_templates' => 'テンプレート管理',
     'global_template' => '共通テンプレート',
+    'import_markdown' => 'Markdown読み込み',
+    'markdown_imported' => 'Markdownを読み込みました。',
 ];

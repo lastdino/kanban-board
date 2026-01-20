@@ -105,4 +105,6 @@ return [
     'template_saved' => 'Template saved.',
     'manage_templates' => 'Manage Templates',
     'global_template' => 'Global Template',
+    'import_markdown' => 'Import Markdown',
+    'markdown_imported' => 'Markdown imported successfully.',
 ];

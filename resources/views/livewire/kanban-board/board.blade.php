@@ -140,7 +140,7 @@
                                         <flux:text class="mb-0!">{{ $column->tasks->count() }} tasks</flux:text>
                                     </div>
 
-                                    <x-kanban-board::label_color color="{{ $column->color }}" class="rounded-lg h-1 rounded-full mt-1 flex-none"/>
+                                    <x-kanban-board::label_color color="{{ $column->color }}" class="rounded-lg h-1 mt-1 flex-none"/>
                                     <div class="flex flex-col gap-2 px-2 py-2 overflow-y-auto"
                                          @dragover.prevent="autoScroll($event)"
                                          @drop="stopAutoScroll()"
@@ -262,7 +262,7 @@
                                     <flux:heading x-on:click="showTasks = !showTasks" class="cursor-pointer">
                                         {{ $column->title }}
                                     </flux:heading>
-                                    <x-kanban-board::label_color color="{{ $column->color }}" class="rounded-lg h-1 rounded-full mt-1 flex-none"/>
+                                    <x-kanban-board::label_color color="{{ $column->color }}" class="rounded-lg h-1 mt-1 flex-none"/>
                                 </td>
                             </tr>
 

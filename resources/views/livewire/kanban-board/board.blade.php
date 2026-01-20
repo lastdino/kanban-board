@@ -51,12 +51,11 @@
                         <flux:text class="mt-2">{{ __('kanban-board::messages.invite_user_description') }}</flux:text>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <select wire:model="selectedUser" class="rounded-lg border border-zinc-200 bg-white dark:border-white/10 dark:bg-zinc-800">
-                            <option value="">{{ __('kanban-board::messages.select_user') }}</option>
+                        <flux:select wire:model="selectedUser" placeholder="{{ __('kanban-board::messages.select_user') }}">
                             @foreach ($NotInvitedUsers as $user)
-                                <option value="{{$user->id}}">{{$user->name}}</option>
+                                <flux:select.option value="{{$user->id}}">{{$user->name}}</flux:select.option>
                             @endforeach
-                        </select>
+                        </flux:select>
                     </div>
                     <div class="flex">
                         <flux:spacer />

@@ -40,7 +40,7 @@ class Board extends Component
 
     public $column_title = '';
 
-    public $selectedUser;
+    public $selectedUser ='';
 
     public $admin = '';
 

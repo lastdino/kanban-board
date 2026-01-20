@@ -70,21 +70,29 @@
                             <flux:input wire:model="title" label="{{ __('kanban-board::messages.title') }}" placeholder="{{ __('kanban-board::messages.title') }}" />
                         </div>
 
-                        @if($templates->count() > 0)
-                            <flux:dropdown>
-                                <flux:button icon="document-duplicate" variant="subtle" size="sm">{{ __('kanban-board::messages.templates') }}</flux:button>
-                                <flux:menu>
-                                    @foreach($templates as $template)
-                                        <flux:menu.item wire:click="applyTemplate({{ $template->id }})">
-                                            {{ $template->name }}
-                                            @if(is_null($template->project_id))
-                                                ({{ __('kanban-board::messages.global_template') }})
-                                            @endif
-                                        </flux:menu.item>
-                                    @endforeach
-                                </flux:menu>
-                            </flux:dropdown>
-                        @endif
+                        <div class="flex gap-2">
+                            <flux:field>
+                                <flux:label class="sr-only">{{ __('kanban-board::messages.import_markdown') }}</flux:label>
+                                <input type="file" wire:model="markdownFile" class="hidden" id="markdown-import" accept=".md,.txt">
+                                <flux:button icon="arrow-up-tray" variant="subtle" size="sm" onclick="document.getElementById('markdown-import').click()">{{ __('kanban-board::messages.import_markdown') }}</flux:button>
+                            </flux:field>
+
+                            @if($templates->count() > 0)
+                                <flux:dropdown>
+                                    <flux:button icon="document-duplicate" variant="subtle" size="sm">{{ __('kanban-board::messages.templates') }}</flux:button>
+                                    <flux:menu>
+                                        @foreach($templates as $template)
+                                            <flux:menu.item wire:click="applyTemplate({{ $template->id }})">
+                                                {{ $template->name }}
+                                                @if(is_null($template->project_id))
+                                                    ({{ __('kanban-board::messages.global_template') }})
+                                                @endif
+                                            </flux:menu.item>
+                                        @endforeach
+                                    </flux:menu>
+                                </flux:dropdown>
+                            @endif
+                        </div>
                     </div>
 
                     <flux:field>

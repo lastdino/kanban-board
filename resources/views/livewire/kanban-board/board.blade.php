@@ -51,12 +51,11 @@
                         <flux:text class="mt-2">{{ __('kanban-board::messages.invite_user_description') }}</flux:text>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <select wire:model="selectedUser" class="rounded-lg border border-zinc-200 bg-white dark:border-white/10 dark:bg-zinc-800">
-                            <option value="">{{ __('kanban-board::messages.select_user') }}</option>
+                        <flux:select wire:model="selectedUser" placeholder="{{ __('kanban-board::messages.select_user') }}">
                             @foreach ($NotInvitedUsers as $user)
-                                <option value="{{$user->id}}">{{$user->name}}</option>
+                                <flux:select.option value="{{$user->id}}">{{$user->name}}</flux:select.option>
                             @endforeach
-                        </select>
+                        </flux:select>
                     </div>
                     <div class="flex">
                         <flux:spacer />
@@ -141,7 +140,7 @@
                                         <flux:text class="mb-0!">{{ $column->tasks->count() }} tasks</flux:text>
                                     </div>
 
-                                    <x-kanban-board::label_color color="{{ $column->color }}" class="rounded-lg h-1 rounded-full mt-1 flex-none"/>
+                                    <x-kanban-board::label_color color="{{ $column->color }}" class="rounded-lg h-1 mt-1 flex-none"/>
                                     <div class="flex flex-col gap-2 px-2 py-2 overflow-y-auto"
                                          @dragover.prevent="autoScroll($event)"
                                          @drop="stopAutoScroll()"
@@ -263,7 +262,7 @@
                                     <flux:heading x-on:click="showTasks = !showTasks" class="cursor-pointer">
                                         {{ $column->title }}
                                     </flux:heading>
-                                    <x-kanban-board::label_color color="{{ $column->color }}" class="rounded-lg h-1 rounded-full mt-1 flex-none"/>
+                                    <x-kanban-board::label_color color="{{ $column->color }}" class="rounded-lg h-1 mt-1 flex-none"/>
                                 </td>
                             </tr>
 

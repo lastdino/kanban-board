@@ -10,11 +10,9 @@ Laravelベースのカンバンボードパッケージです。Livewire 3とFlu
 
 - PHP 8.0以上
 - Laravel 12.0以上
-- Livewire 3.0以上
+- Livewire 4.0以上
 - Livewire Flux 2.0以上
 - Spatie Laravel Media Library 11.13以上
-- AlpineJS 3.0以上
-- @alpinejs/sort 3.0以上
 - @tailwindcss/typography 0.5以上
 
 ## インストール
@@ -85,11 +83,6 @@ php artisan migrate
 # 設定ファイルを公開（オプション）
 php artisan vendor:publish --provider="Spatie\MediaLibrary\MediaLibraryServiceProvider" --tag="config"
 ```
-
-
-### 7. AlpineJS Sort Plugin のインストール
-このパッケージはドラッグ＆ドロップ機能に '@alpinejs/sort' プラグインを使用しています。AlpineJS Sort Pluginのインストールについては、[公式ドキュメント](https://alpinejs.dev/plugins/sort)を参照してください。
-
 
 ## 機能
 
